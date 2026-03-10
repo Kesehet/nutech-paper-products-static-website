@@ -20,10 +20,13 @@ spl_autoload_register(static function (string $class): void {
 });
 
 App\Core\Env::load(BASE_PATH . '/.env');
+
+// First-time installer: if users table is missing or empty, auto-apply schema + seed.
+App\Core\AutoSync::runIfRequired();
+
 App\Core\Session::start();
 
 $timezone = env('APP_TIMEZONE', 'UTC');
 if (is_string($timezone) && $timezone !== '') {
     date_default_timezone_set($timezone);
 }
-
