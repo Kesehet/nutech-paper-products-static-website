@@ -3,13 +3,20 @@ declare(strict_types=1);
 
 $siteTitle = (string) ($site['title'] ?? 'Nutech Paper Products');
 $footerNav = $footerNav ?? $primaryNav ?? [];
+$logoPath = trim((string) ($site['logo_path'] ?? '/assets/img/nutech_square_logo.png'));
+if ($logoPath === '') {
+    $logoPath = '/assets/img/nutech_square_logo.png';
+}
+$logoUrl = preg_match('#^(https?:)?//#i', $logoPath) === 1
+    ? $logoPath
+    : ($logoPath[0] === '/' ? path_url($logoPath) : asset($logoPath));
 ?>
 <footer class="bg-dark-navy border-t border-slate-800 pt-16 pb-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid md:grid-cols-4 gap-10">
             <div>
                 <a href="<?= e(path_url('/')) ?>" class="flex items-center gap-3 mb-4">
-                    <img src="<?= asset('assets/img/logo.png') ?>" alt="<?= e($siteTitle) ?>" class="h-9 w-auto">
+                    <img src="<?= e($logoUrl) ?>" alt="<?= e($siteTitle) ?>" class="h-9 w-auto">
                     <span class="text-white font-bold"><?= e($siteTitle) ?></span>
                 </a>
                 <p class="text-sm text-slate-400">

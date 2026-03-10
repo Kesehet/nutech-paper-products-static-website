@@ -4,11 +4,18 @@ declare(strict_types=1);
 $currentPath = (string) ($currentPath ?? '/');
 $primaryNav = $primaryNav ?? [];
 $siteTitle = (string) ($site['title'] ?? 'Nutech Paper Products');
+$logoPath = trim((string) ($site['logo_path'] ?? '/assets/img/nutech_square_logo.png'));
+if ($logoPath === '') {
+    $logoPath = '/assets/img/nutech_square_logo.png';
+}
+$logoUrl = preg_match('#^(https?:)?//#i', $logoPath) === 1
+    ? $logoPath
+    : ($logoPath[0] === '/' ? path_url($logoPath) : asset($logoPath));
 ?>
 <header class="sticky top-0 z-50 w-full border-b border-slate-700/50 bg-dark-navy backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <a href="<?= e(path_url('/')) ?>" class="flex items-center gap-3">
-            <img src="<?= asset('assets/img/logo.png') ?>" alt="<?= e($siteTitle) ?>" class="h-10 w-auto">
+            <img src="<?= e($logoUrl) ?>" alt="<?= e($siteTitle) ?>" class="h-10 w-auto">
             <span class="text-xl font-bold tracking-tight text-white hidden sm:block"><?= e($siteTitle) ?></span>
         </a>
         <button id="mobile-nav-toggle" class="md:hidden text-white" type="button" aria-label="Toggle menu">

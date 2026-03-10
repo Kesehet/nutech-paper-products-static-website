@@ -107,6 +107,7 @@ AND NOT EXISTS (SELECT 1 FROM products WHERE slug = 'pre-gummed-paper');
 
 INSERT INTO settings (setting_group, setting_key, setting_value, value_type, is_public) VALUES
 ('site', 'title', 'Nutech Paper Products', 'string', 1),
+('site', 'logo_path', '/assets/img/nutech_square_logo.png', 'string', 1),
 ('site', 'contact_email', 'info@nutechpaper.com', 'string', 1),
 ('site', 'contact_phone', '+91 11 5555 4444', 'string', 1),
 ('site', 'address', 'Plot No. 45, Okhla Industrial Estate, Phase III, New Delhi - 110020, India', 'string', 1),
@@ -130,4 +131,3 @@ INSERT INTO navigation_items (menu_key, label, href, sort_order, is_active) VALU
 ('footer', 'About Us', '/about-us', 3, 1),
 ('footer', 'Contact', '/contact-us', 4, 1)
 ON DUPLICATE KEY UPDATE href = VALUES(href), sort_order = VALUES(sort_order), is_active = VALUES(is_active);
-

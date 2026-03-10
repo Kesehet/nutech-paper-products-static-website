@@ -14,6 +14,7 @@ final class SettingsAdminController extends BaseAdminController
 {
     private const FIELDS = [
         'site.title' => 'string',
+        'site.logo_path' => 'string',
         'site.contact_email' => 'string',
         'site.contact_phone' => 'string',
         'site.address' => 'string',
