@@ -1,0 +1,18 @@
+Options -Indexes
+RewriteEngine On
+
+# Block direct access to sensitive files
+RewriteRule (^|/)\.(?!well-known/) - [F,L]
+RewriteRule ^(app|config|database|routes|storage|templates)/ - [F,L,NC]
+RewriteRule ^\.env - [F,L,NC]
+
+# Serve assets/uploads from /public without exposing /public in URL
+RewriteRule ^(assets|uploads)/(.*)$ public/$1/$2 [L,NC]
+RewriteRule ^favicon\.ico$ public/favicon.ico [L,NC]
+RewriteRule ^robots\.txt$ public/robots.txt [L,NC]
+
+# Pass all non-file requests to front controller
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ public/index.php [L,QSA]
+

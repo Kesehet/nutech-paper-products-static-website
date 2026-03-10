@@ -1,0 +1,478 @@
+You are building a production-ready PHP website and admin panel for deployment on standard Hostinger PHP hosting.
+
+Project context:
+- The frontend designs are already finalized.
+- The design reference files are available in the `screens` folder.
+- You must use those designs as the visual source of truth.
+- The UI design itself must NOT be changed.
+- Only content, images, text, SEO fields, scripts, and theme-related settings should be editable.
+- The website must be built in PHP and must run properly on Hostinger shared hosting.
+- Keep the architecture simple enough for shared hosting, but structured enough for long-term maintainability.
+
+High-level objective:
+Build a CMS-driven PHP website with:
+1. Public-facing website matching the provided designs
+2. Full admin dashboard for managing content, products, SEO, media, users, and site settings
+3. Clean reusable architecture
+4. SEO-friendly routing without trailing `.php`
+5. Documentation-first setup before implementation
+
+==================================================
+PHASE 1 — PLAN FIRST
+==================================================
+
+Before building the actual implementation, first create the following planning files in the root of the project:
+
+1. `requirements.md`
+2. `er_diagram.md`
+3. `design.md`
+
+These files must be detailed, practical, and implementation-oriented.
+
+### requirements.md
+Document:
+- project overview
+- goals
+- functional requirements
+- non-functional requirements
+- public website pages
+- admin dashboard modules
+- user roles and permissions
+- content management requirements
+- SEO management requirements
+- media management requirements
+- routing requirements
+- deployment assumptions for Hostinger
+- security requirements
+- scalability considerations
+- future extension ideas
+
+### er_diagram.md
+Document:
+- database entities
+- relationships
+- fields
+- constraints
+- role relationships
+- content relationships
+- SEO storage strategy
+- media mapping
+- theme/settings storage
+
+Use Mermaid ER diagrams where useful.
+
+### design.md
+Document:
+- frontend implementation rules
+- component breakdown
+- reusable partials
+- page layout inheritance strategy
+- how screens should be mapped into PHP templates
+- responsive behavior expectations
+- file/folder structure for templates, assets, and admin
+- naming conventions
+- styling rules
+- what is editable and what is locked
+- content source mapping between backend fields and frontend sections
+
+Use Mermaid flow diagrams where useful.
+
+Do not skip planning. Start with these files first.
+
+==================================================
+PHASE 2 — WEBSITE IMPLEMENTATION REQUIREMENTS
+==================================================
+
+The website has 5 public pages:
+
+1. Homepage
+2. About Us
+3. Contact Us
+4. Product Catalog
+5. Product Detail
+
+Important:
+- All menu items must be wired correctly to their respective pages.
+- Header and footer must be taken ONLY from the homepage design.
+- Ignore alternate headers/footers seen in other page designs.
+- Use homepage header and homepage footer as the global reusable header/footer across the whole site.
+
+The frontend must be broken into reusable PHP components such as:
+- header
+- footer
+- navigation
+- hero sections where reusable
+- product cards
+- CTA sections
+- breadcrumbs
+- common SEO/meta partials
+- scripts partials
+- form partials
+- admin layout partials
+
+Recommended architecture:
+- reusable includes/partials
+- page templates
+- config layer
+- routing layer
+- controllers or route handlers
+- models or data access layer
+- admin modules separated from public views
+
+Do NOT hardcode content into templates if it should be editable from dashboard.
+
+==================================================
+PHASE 3 — CMS / ADMIN DASHBOARD
+==================================================
+
+Build a practical internal dashboard so the client can control the site without editing code.
+
+The dashboard should allow management of:
+
+### A. Pages / Content
+Editable content across all pages:
+- headings
+- subheadings
+- paragraphs
+- CTA labels
+- CTA links
+- section visibility (optional if simple enough)
+- contact details
+- about us content
+- homepage content blocks
+- catalog intro content
+- product detail supporting content
+
+### B. Products
+A proper product management module:
+- add product
+- edit product
+- delete product
+- publish/unpublish product
+- slug
+- product title
+- short description
+- long description
+- specifications
+- features
+- applications
+- category
+- sort order
+- featured image
+- gallery images
+- SEO title
+- SEO description
+- SEO keywords or equivalent metadata
+- OG image if feasible
+- status
+
+### C. Media Library
+A backend media manager with:
+- upload media
+- image listing/gallery
+- file preview where possible
+- file metadata
+- image reuse across sections
+- delete media
+- select existing media for pages/products
+- safe upload validation
+
+### D. SEO Management
+Need a centralized way to manage:
+- per-page meta title
+- per-page meta description
+- canonical URL if needed
+- social sharing image
+- robots meta if needed
+- schema / JSON-LD fields if feasible
+- global SEO defaults
+- header scripts
+- footer scripts
+
+### E. Header/Footer Script Injection
+Need editable fields in dashboard for:
+- custom HTML in head
+- custom scripts in head
+- footer scripts
+- analytics scripts
+- verification tags
+- other header/footer code insertions
+
+Sanitize carefully but still allow intended admin control.
+
+### F. Theme / Site Settings
+Need a settings area for:
+- site title
+- logo
+- favicon
+- contact info
+- address
+- social links
+- primary theme color(s)
+- secondary theme color(s)
+- CTA button text defaults if needed
+- global branding assets
+
+Important:
+- Theme settings should update colors/branding without changing layout structure.
+- The layout/design must remain locked.
+- Only theme variables and editable assets/content should be changeable.
+
+### G. User Management
+Need basic user management with 2 roles for now:
+1. Admin
+2. Content Editor (non-admin)
+
+Permissions:
+- Admin:
+  - full access
+  - manage users
+  - add/remove users
+  - manage settings
+  - manage SEO
+  - manage scripts
+  - manage all content and products
+
+- Content Editor:
+  - edit content
+  - edit products
+  - upload/select media
+  - update text/images/content
+  - cannot manage users
+  - cannot delete or create admin users
+  - should not have access to sensitive system settings unless explicitly safe
+
+Keep RBAC simple and clear.
+
+==================================================
+PHASE 4 — FRONTEND CONTENT RULES
+==================================================
+
+Critical rule:
+The design/UI must remain visually faithful to the provided screens.
+
+Allowed to change:
+- text
+- images
+- links
+- SEO/meta
+- scripts
+- theme values
+- product data
+- page content
+
+Not allowed to change:
+- layout structure
+- spacing logic unless required for responsiveness
+- visual composition
+- component arrangement
+- overall design language
+
+Build the frontend so the admin can update content without breaking the layout.
+
+==================================================
+PHASE 5 — ROUTING / URL STRUCTURE
+==================================================
+
+Need clean URLs without `.php`.
+
+Examples:
+- `/`
+- `/about-us`
+- `/contact-us`
+- `/product-catalog`
+- `/product/some-product-slug`
+
+Update `.htaccess` accordingly so trailing `.php` is hidden and routes work properly on Hostinger Apache hosting.
+
+Need:
+- SEO-friendly URLs
+- route handling for public pages
+- route handling for product details using slug
+- proper 404 page/handler
+- safe fallback behavior
+
+Also update `.env` and config usage appropriately.
+
+==================================================
+PHASE 6 — TECHNICAL EXPECTATIONS
+==================================================
+
+Please use a clean PHP architecture that is practical for shared hosting.
+
+Recommendations:
+- PHP 8+
+- MySQL / MariaDB
+- Apache compatible
+- `.env` driven configuration
+- PDO for database access
+- secure authentication/session handling
+- CSRF protection for admin forms
+- password hashing using PHP built-ins
+- validation and sanitization throughout
+- flash messages for dashboard actions
+- file upload restrictions and validation
+- prepared statements everywhere
+- minimal dependency footprint unless genuinely useful
+
+Avoid overengineering with a heavy framework if not necessary for Hostinger deployment.
+But the codebase must still be modular and clean.
+
+A lightweight MVC-like structure is preferred.
+
+==================================================
+PHASE 7 — SUGGESTED DATABASE AREAS
+==================================================
+
+Plan tables for things like:
+- users
+- roles
+- pages
+- page_sections or page_content_blocks
+- products
+- product_categories
+- product_images
+- media
+- seo_meta
+- settings
+- navigation_items if helpful
+- activity_logs if lightweight
+- password_resets or auth support tables if needed
+
+You may refine this structure, but document it clearly first in `er_diagram.md`.
+
+==================================================
+PHASE 8 — FILE/FOLDER STRUCTURE
+==================================================
+
+Create a maintainable folder structure.
+
+Suggested direction:
+- `/public` or public entry strategy suitable for Hostinger
+- `/app`
+- `/config`
+- `/templates`
+- `/partials`
+- `/admin`
+- `/uploads`
+- `/storage` where applicable
+- `/routes`
+- `/assets`
+- `/screens`
+- documentation files in root
+
+If Hostinger constraints make a classic public folder setup difficult, document the chosen deployment structure clearly.
+
+==================================================
+PHASE 9 — ADMIN UX REQUIREMENTS
+==================================================
+
+The dashboard does not need to be overly fancy, but it must be practical and full-featured.
+
+Dashboard should include:
+- login screen
+- overview/home
+- page content management
+- product management
+- media manager
+- SEO/settings manager
+- user management
+- profile/logout
+
+Nice to have:
+- image preview before upload/use
+- slug auto-generation
+- validation messages
+- status badges
+- publish/unpublish toggles
+- search/filter for products/media
+- basic audit visibility if simple
+
+==================================================
+PHASE 10 — DEPLOYMENT / CONFIG
+==================================================
+
+Set up:
+- `.env.example`
+- environment variable loading
+- `.htaccess`
+- DB config
+- upload directory handling
+- production-safe defaults
+
+Ensure the project is deployable on Hostinger shared hosting with minimal manual effort.
+
+Document:
+- setup steps
+- DB import steps
+- env setup
+- file permission requirements
+- upload directory requirements
+
+==================================================
+PHASE 11 — DELIVERABLES
+==================================================
+
+Deliver in this order:
+
+1. Planning docs first:
+   - `requirements.md`
+   - `er_diagram.md`
+   - `design.md`
+
+2. Then project scaffolding and architecture
+
+3. Then public website templates
+
+4. Then admin dashboard
+
+5. Then routing / SEO / settings integration
+
+6. Then final setup docs
+
+Also create a short `README.md` covering:
+- project setup
+- local run instructions
+- database setup
+- deployment notes for Hostinger
+- login seeding or initial admin creation process
+
+==================================================
+PHASE 12 — IMPORTANT IMPLEMENTATION RULES
+==================================================
+
+- Do not ignore the screens folder
+- Do not redesign the website
+- Do not hardcode content that should be CMS-managed
+- Do not build a static-only site
+- Do not skip documentation
+- Do not skip security basics
+- Do not leave menu links unwired
+- Do not expose `.php` in URLs
+- Do not treat admin and content editor as identical roles
+- Do not make the design editable, only the content and controlled settings
+- Product detail pages must be dynamically generated from product data in the admin dashboard, not hand-built as separate static files.
+- The `screens` folder contains the final approved designs.
+- Treat spacing, sections, and visual hierarchy as locked.
+- Use the homepage header and footer globally across all pages.
+
+
+==================================================
+FINAL INSTRUCTION
+==================================================
+
+Start by analyzing the provided screen designs and then create:
+- `requirements.md`
+- `er_diagram.md`
+- `design.md`
+
+Use Mermaid diagrams where helpful.
+
+Only after that, proceed with implementation.
+
+Whenever uncertain, prefer:
+- reusable architecture
+- CMS-managed content
+- Hostinger compatibility
+- faithful design implementation
+- strong maintainability
