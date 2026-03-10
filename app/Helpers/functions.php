@@ -31,28 +31,91 @@ if (!function_exists('asset')) {
     function asset(string $path): string
     {
         $trimmed = ltrim($path, '/');
-        $basePath = app_base_path();
-        return ($basePath === '' ? '' : $basePath) . '/' . $trimmed;
+        return path_url('/' . $trimmed);
     }
 }
 
 if (!function_exists('url')) {
     function url(string $path = ''): string
     {
-        $base = rtrim((string) env('APP_URL', ''), '/');
-        $suffix = ltrim($path, '/');
-        return $suffix === '' ? $base : $base . '/' . $suffix;
+        if ($path !== '' && preg_match('#^(https?:)?//#i', $path) === 1) {
+            return $path;
+        }
+
+        $baseUrl = app_base_url();
+        $basePath = app_base_path();
+        $prefix = rtrim($baseUrl . $basePath, '/');
+        $suffix = '/' . ltrim($path, '/');
+
+        if ($path === '') {
+            return $prefix === '' ? '/' : $prefix;
+        }
+
+        if ($prefix === '') {
+            return $suffix;
+        }
+
+        return $prefix . $suffix;
+    }
+}
+
+if (!function_exists('normalize_path_prefix')) {
+    function normalize_path_prefix(string $value): string
+    {
+        $trimmed = trim($value);
+        if ($trimmed === '' || $trimmed === '/' || $trimmed === '.') {
+            return '';
+        }
+
+        return '/' . trim($trimmed, '/');
     }
 }
 
 if (!function_exists('app_base_path')) {
     function app_base_path(): string
     {
+        $configured = env('APP_BASE_PATH', null);
+        if ($configured !== null) {
+            return normalize_path_prefix((string) $configured);
+        }
+
         $path = parse_url((string) env('APP_URL', ''), PHP_URL_PATH);
-        if (!is_string($path) || $path === '' || $path === '/') {
+        if (!is_string($path)) {
             return '';
         }
-        return rtrim($path, '/');
+
+        return normalize_path_prefix($path);
+    }
+}
+
+if (!function_exists('app_base_url')) {
+    function app_base_url(): string
+    {
+        $raw = trim((string) env('APP_URL', ''));
+        if ($raw === '') {
+            return '';
+        }
+
+        $parts = parse_url($raw);
+        if (!is_array($parts)) {
+            return '';
+        }
+
+        $scheme = (string) ($parts['scheme'] ?? '');
+        $host = (string) ($parts['host'] ?? '');
+        if ($scheme === '' || $host === '') {
+            return '';
+        }
+
+        $port = isset($parts['port']) ? ':' . (int) $parts['port'] : '';
+        return $scheme . '://' . $host . $port;
+    }
+}
+
+if (!function_exists('app_use_absolute_urls')) {
+    function app_use_absolute_urls(): bool
+    {
+        return config_bool('APP_USE_ABSOLUTE_URLS', false);
     }
 }
 
@@ -69,7 +132,18 @@ if (!function_exists('path_url')) {
 
         $basePath = app_base_path();
         $normalized = '/' . ltrim($path, '/');
-        return ($basePath === '' ? '' : $basePath) . ($normalized === '//' ? '/' : $normalized);
+        $relative = ($basePath === '' ? '' : $basePath) . ($normalized === '//' ? '/' : $normalized);
+
+        if (!app_use_absolute_urls()) {
+            return $relative;
+        }
+
+        $baseUrl = app_base_url();
+        if ($baseUrl === '') {
+            return $relative;
+        }
+
+        return rtrim($baseUrl, '/') . $relative;
     }
 }
 

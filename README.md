@@ -45,6 +45,18 @@ CMS-driven PHP website + admin panel for Hostinger-compatible Apache/PHP hosting
    - Root strategy is supported using project-level `.htaccess`.
    - If document root can be changed, point it to `public/`.
 
+### URL/Base Path Configuration
+- `APP_URL`: primary site URL (used for host + optional absolute URL generation).
+- `APP_BASE_PATH`: URL path prefix where app is mounted.
+  - Example subfolder deploy: `/nutech-paper-products-static-website`
+  - Example root deploy: leave empty
+- `APP_USE_ABSOLUTE_URLS`:
+  - `false` (default): generate root-relative URLs like `/assets/...`
+  - `true`: generate absolute URLs like `https://example.com/assets/...`
+- `APP_REDIRECT_TO_BASE_PATH`:
+  - `true` enables 301 redirect to canonical `APP_BASE_PATH`.
+  - Keep `false` until your server can serve the app on that canonical path.
+
 ### Optional Auto-Sync (Enabled by Default)
 - On app boot, if `AUTO_SYNC_ON_BOOT=true`, the app checks DB state.
 - If `users` table is missing or has zero rows, it automatically runs:
@@ -83,6 +95,10 @@ Change this immediately in production.
 - Set production env values in `.env`.
 - Import DB schema and seed data.
 - Configure secure permissions for uploads/log directories.
+- To remove `/nutech-paper-products-static-website` from public URLs:
+  - Preferred: point domain document root to this project directory (or its `public/` folder).
+  - Then set `APP_BASE_PATH=` (empty).
+  - Optionally set `APP_REDIRECT_TO_BASE_PATH=true` to 301 old subfolder links to root.
 
 ## Next Implementation Steps
 1. Complete admin CRUD modules for Pages, Products, Media, SEO, Settings, Users.

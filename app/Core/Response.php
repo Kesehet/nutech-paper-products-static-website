@@ -9,10 +9,7 @@ final class Response
     {
         $target = $path;
         if (str_starts_with($path, '/')) {
-            $basePath = app_base_path();
-            if ($basePath !== '' && !str_starts_with($path, $basePath . '/')) {
-                $target = $basePath . $path;
-            }
+            $target = path_url($path);
         }
 
         header('Location: ' . $target);

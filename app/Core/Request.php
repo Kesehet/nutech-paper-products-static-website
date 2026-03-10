@@ -39,10 +39,13 @@ final class Request
             return '/';
         }
 
-        $basePath = parse_url((string) env('APP_URL', ''), PHP_URL_PATH);
-        if (is_string($basePath) && $basePath !== '' && $basePath !== '/') {
-            if (str_starts_with($path, $basePath)) {
-                $path = substr($path, strlen($basePath));
+        $basePath = app_base_path();
+        if ($basePath !== '' && str_starts_with($path, $basePath)) {
+            $path = substr($path, strlen($basePath));
+        } elseif ($basePath === '') {
+            $detectedPrefix = $this->detectedInstallPrefix();
+            if ($detectedPrefix !== '' && str_starts_with($path, $detectedPrefix)) {
+                $path = substr($path, strlen($detectedPrefix));
             }
         }
 
@@ -74,5 +77,24 @@ final class Request
     {
         return $this->server[$key] ?? $default;
     }
-}
 
+    private function detectedInstallPrefix(): string
+    {
+        $scriptName = (string) ($this->server['SCRIPT_NAME'] ?? '');
+        if ($scriptName === '') {
+            return '';
+        }
+
+        $scriptDir = str_replace('\\', '/', dirname($scriptName));
+        $scriptDir = normalize_path_prefix($scriptDir);
+        if ($scriptDir === '' || $scriptDir === '/public') {
+            return '';
+        }
+
+        if (str_ends_with($scriptDir, '/public')) {
+            return substr($scriptDir, 0, -7) ?: '';
+        }
+
+        return $scriptDir;
+    }
+}
