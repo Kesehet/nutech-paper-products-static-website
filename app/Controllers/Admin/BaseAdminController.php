@@ -9,6 +9,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Core\View;
+use App\Services\ActivityLogger;
 
 abstract class BaseAdminController
 {
@@ -52,5 +53,20 @@ abstract class BaseAdminController
             'flashSuccess' => $flashSuccess,
             'flashError' => $flashError,
         ], $payload), 'layouts/admin');
+    }
+
+    protected function logActivity(Request $request, string $action, string $entityType, ?int $entityId = null, ?array $before = null, ?array $after = null): void
+    {
+        $user = Auth::user();
+        ActivityLogger::log(
+            (int) ($user['id'] ?? 0) ?: null,
+            $action,
+            $entityType,
+            $entityId,
+            $before,
+            $after,
+            (string) ($request->server('REMOTE_ADDR', '') ?: ''),
+            (string) ($request->server('HTTP_USER_AGENT', '') ?: '')
+        );
     }
 }

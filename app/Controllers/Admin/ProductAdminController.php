@@ -91,6 +91,11 @@ final class ProductAdminController extends BaseAdminController
             $productId = (int) $pdo->lastInsertId();
             $this->syncProductGallery($pdo, $productId, $request);
             $pdo->commit();
+            $this->logActivity($request, 'product.create', 'product', $productId, null, [
+                'title' => $payload['title'] ?? '',
+                'slug' => $payload['slug'] ?? '',
+                'status' => $payload['status'] ?? '',
+            ]);
             Session::flash('success', 'Product created successfully.');
         } catch (PDOException $exception) {
             if (isset($pdo) && $pdo->inTransaction()) {
@@ -141,7 +146,8 @@ final class ProductAdminController extends BaseAdminController
 
         $this->validateCsrfOrRedirect($request, '/admin/products/' . $id . '/edit');
 
-        if ($this->findProduct($id) === null) {
+        $existing = $this->findProduct($id);
+        if ($existing === null) {
             Session::flash('error', 'Product not found.');
             Response::redirect('/admin/products');
         }
@@ -179,6 +185,15 @@ final class ProductAdminController extends BaseAdminController
             $stmt->execute($payload);
             $this->syncProductGallery($pdo, $id, $request);
             $pdo->commit();
+            $this->logActivity($request, 'product.update', 'product', $id, [
+                'title' => $existing['title'] ?? '',
+                'slug' => $existing['slug'] ?? '',
+                'status' => $existing['status'] ?? '',
+            ], [
+                'title' => $payload['title'] ?? '',
+                'slug' => $payload['slug'] ?? '',
+                'status' => $payload['status'] ?? '',
+            ]);
             Session::flash('success', 'Product updated successfully.');
         } catch (PDOException $exception) {
             if (isset($pdo) && $pdo->inTransaction()) {
@@ -202,8 +217,13 @@ final class ProductAdminController extends BaseAdminController
 
         try {
             $pdo = Database::connection();
+            $before = $this->findProduct($id);
             $stmt = $pdo->prepare('DELETE FROM products WHERE id = :id');
             $stmt->execute(['id' => $id]);
+            $this->logActivity($request, 'product.delete', 'product', $id, [
+                'title' => $before['title'] ?? '',
+                'slug' => $before['slug'] ?? '',
+            ], null);
             Session::flash('success', 'Product deleted.');
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to delete product: ' . $exception->getMessage());

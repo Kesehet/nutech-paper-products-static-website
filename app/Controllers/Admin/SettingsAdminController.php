@@ -89,6 +89,9 @@ final class SettingsAdminController extends BaseAdminController
                 ]);
             }
 
+            $this->logActivity($request, 'settings.save', 'settings', null, null, [
+                'field_count' => count(self::FIELDS),
+            ]);
             Session::flash('success', 'Settings saved successfully.');
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to save settings: ' . $exception->getMessage());
@@ -97,4 +100,3 @@ final class SettingsAdminController extends BaseAdminController
         Response::redirect('/admin/settings');
     }
 }
-

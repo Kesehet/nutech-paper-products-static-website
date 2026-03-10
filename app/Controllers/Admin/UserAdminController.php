@@ -80,6 +80,12 @@ final class UserAdminController extends BaseAdminController
                 'password_hash' => password_hash($password, PASSWORD_DEFAULT),
                 'is_active' => $isActive,
             ]);
+            $userId = (int) $pdo->lastInsertId();
+            $this->logActivity($request, 'user.create', 'user', $userId, null, [
+                'email' => $email,
+                'role_id' => $roleId,
+                'is_active' => $isActive,
+            ]);
             Session::flash('success', 'User created successfully.');
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to create user: ' . $exception->getMessage());
@@ -123,6 +129,9 @@ final class UserAdminController extends BaseAdminController
 
         try {
             $pdo = Database::connection();
+            $beforeStmt = $pdo->prepare('SELECT email, role_id, is_active FROM users WHERE id = :id LIMIT 1');
+            $beforeStmt->execute(['id' => $id]);
+            $before = $beforeStmt->fetch() ?: null;
             $sql = 'UPDATE users
                     SET full_name = :full_name,
                         email = :email,
@@ -146,6 +155,11 @@ final class UserAdminController extends BaseAdminController
             $stmt = $pdo->prepare($sql);
             $stmt->execute($paramsBind);
 
+            $this->logActivity($request, 'user.update', 'user', $id, is_array($before) ? $before : null, [
+                'email' => $email,
+                'role_id' => $roleId,
+                'is_active' => $isActive,
+            ]);
             Session::flash('success', 'User updated successfully.');
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to update user: ' . $exception->getMessage());
@@ -173,8 +187,12 @@ final class UserAdminController extends BaseAdminController
 
         try {
             $pdo = Database::connection();
+            $beforeStmt = $pdo->prepare('SELECT email, role_id FROM users WHERE id = :id LIMIT 1');
+            $beforeStmt->execute(['id' => $id]);
+            $before = $beforeStmt->fetch() ?: null;
             $stmt = $pdo->prepare('DELETE FROM users WHERE id = :id');
             $stmt->execute(['id' => $id]);
+            $this->logActivity($request, 'user.delete', 'user', $id, is_array($before) ? $before : null, null);
             Session::flash('success', 'User deleted successfully.');
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to delete user: ' . $exception->getMessage());
@@ -183,4 +201,3 @@ final class UserAdminController extends BaseAdminController
         Response::redirect('/admin/users');
     }
 }
-

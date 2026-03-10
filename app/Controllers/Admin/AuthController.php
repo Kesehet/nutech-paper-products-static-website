@@ -45,6 +45,11 @@ final class AuthController extends BaseAdminController
             Response::redirect('/admin/login');
         }
 
+        $user = Auth::user();
+        $this->logActivity($request, 'auth.login', 'user', (int) ($user['id'] ?? 0) ?: null, null, [
+            'email' => (string) ($user['email'] ?? ''),
+        ]);
+
         Response::redirect('/admin/dashboard');
     }
 
@@ -53,6 +58,11 @@ final class AuthController extends BaseAdminController
         if (!Csrf::validate((string) $request->input('_csrf'))) {
             Response::redirect('/admin/dashboard');
         }
+
+        $user = Auth::user();
+        $this->logActivity($request, 'auth.logout', 'user', (int) ($user['id'] ?? 0) ?: null, null, [
+            'email' => (string) ($user['email'] ?? ''),
+        ]);
 
         Auth::logout();
         Session::flash('success', 'You are logged out.');

@@ -120,6 +120,13 @@ final class MediaAdminController extends BaseAdminController
                 'caption' => '',
                 'uploaded_by' => (int) ($user['id'] ?? 0) ?: null,
             ]);
+            $mediaId = (int) $pdo->lastInsertId();
+            $this->logActivity($request, 'media.upload', 'media', $mediaId, null, [
+                'original_name' => $originalName,
+                'storage_path' => $storagePath,
+                'mime_type' => $mimeType,
+                'size_bytes' => $size,
+            ]);
             Session::flash('success', 'Media uploaded successfully.');
         } catch (PDOException $exception) {
             @unlink($targetPath);
@@ -145,6 +152,7 @@ final class MediaAdminController extends BaseAdminController
             $usageStmt = $pdo->prepare(
                 'SELECT
                     (SELECT COUNT(*) FROM product_images WHERE media_id = :media_id) +
+                    (SELECT COUNT(*) FROM products WHERE featured_image_id = :media_id) +
                     (SELECT COUNT(*) FROM page_sections WHERE featured_media_id = :media_id) +
                     (SELECT COUNT(*) FROM seo_meta WHERE og_image_id = :media_id) AS usage_count'
             );
@@ -165,6 +173,10 @@ final class MediaAdminController extends BaseAdminController
 
             $deleteStmt = $pdo->prepare('DELETE FROM media WHERE id = :id');
             $deleteStmt->execute(['id' => $id]);
+            $this->logActivity($request, 'media.delete', 'media', $id, [
+                'original_name' => $row['file_name'] ?? '',
+                'storage_path' => $row['storage_path'] ?? '',
+            ], null);
 
             $filePath = BASE_PATH . '/public' . (string) ($row['storage_path'] ?? '');
             if (is_file($filePath)) {
@@ -179,4 +191,3 @@ final class MediaAdminController extends BaseAdminController
         Response::redirect('/admin/media');
     }
 }
-

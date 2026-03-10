@@ -197,6 +197,10 @@ final class PageAdminController extends BaseAdminController
             }
 
             $pdo->commit();
+            $this->logActivity($request, 'page.update', 'page', $pageId, null, [
+                'title' => $title,
+                'is_published' => $isPublished,
+            ]);
             Session::flash('success', 'Page content updated successfully.');
         } catch (PDOException $exception) {
             if (isset($pdo) && $pdo->inTransaction()) {

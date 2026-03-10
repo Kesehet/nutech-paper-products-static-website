@@ -172,6 +172,11 @@ final class SeoAdminController extends BaseAdminController
                     updated_at = NOW()'
             );
             $stmt->execute($payload);
+            $this->logActivity($request, 'seo.save', 'seo_meta', null, null, [
+                'entity_type' => $entityType,
+                'entity_id' => $entityId,
+                'meta_title' => $payload['meta_title'],
+            ]);
             Session::flash('success', 'SEO metadata saved successfully.');
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to save SEO metadata: ' . $exception->getMessage());
@@ -232,6 +237,9 @@ final class SeoAdminController extends BaseAdminController
                 }
             }
 
+            $this->logActivity($request, 'scripts.save', 'script_injections', null, null, [
+                'locations' => $locations,
+            ]);
             Session::flash('success', 'Script injections updated.');
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to save script injections: ' . $exception->getMessage());

@@ -72,6 +72,11 @@ final class CategoryAdminController extends BaseAdminController
                 'sort_order' => $sortOrder,
                 'is_active' => $isActive,
             ]);
+            $categoryId = (int) $pdo->lastInsertId();
+            $this->logActivity($request, 'category.create', 'product_category', $categoryId, null, [
+                'name' => $name,
+                'slug' => $slug,
+            ]);
             Session::flash('success', 'Category created successfully.');
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to create category: ' . $exception->getMessage());
@@ -104,6 +109,9 @@ final class CategoryAdminController extends BaseAdminController
 
         try {
             $pdo = Database::connection();
+            $beforeStmt = $pdo->prepare('SELECT name, slug, is_active FROM product_categories WHERE id = :id LIMIT 1');
+            $beforeStmt->execute(['id' => $id]);
+            $before = $beforeStmt->fetch() ?: null;
             $stmt = $pdo->prepare(
                 'UPDATE product_categories
                  SET name = :name,
@@ -120,6 +128,11 @@ final class CategoryAdminController extends BaseAdminController
                 'slug' => $slug,
                 'description' => $description,
                 'sort_order' => $sortOrder,
+                'is_active' => $isActive,
+            ]);
+            $this->logActivity($request, 'category.update', 'product_category', $id, is_array($before) ? $before : null, [
+                'name' => $name,
+                'slug' => $slug,
                 'is_active' => $isActive,
             ]);
             Session::flash('success', 'Category updated successfully.');
@@ -142,6 +155,9 @@ final class CategoryAdminController extends BaseAdminController
 
         try {
             $pdo = Database::connection();
+            $beforeStmt = $pdo->prepare('SELECT name, slug FROM product_categories WHERE id = :id LIMIT 1');
+            $beforeStmt->execute(['id' => $id]);
+            $before = $beforeStmt->fetch() ?: null;
             $usageStmt = $pdo->prepare('SELECT COUNT(*) FROM products WHERE category_id = :id');
             $usageStmt->execute(['id' => $id]);
             if ((int) $usageStmt->fetchColumn() > 0) {
@@ -151,6 +167,7 @@ final class CategoryAdminController extends BaseAdminController
 
             $stmt = $pdo->prepare('DELETE FROM product_categories WHERE id = :id');
             $stmt->execute(['id' => $id]);
+            $this->logActivity($request, 'category.delete', 'product_category', $id, is_array($before) ? $before : null, null);
             Session::flash('success', 'Category deleted.');
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to delete category: ' . $exception->getMessage());
@@ -159,4 +176,3 @@ final class CategoryAdminController extends BaseAdminController
         Response::redirect('/admin/categories');
     }
 }
-
