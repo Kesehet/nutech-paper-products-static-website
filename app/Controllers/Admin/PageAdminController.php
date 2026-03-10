@@ -15,17 +15,41 @@ final class PageAdminController extends BaseAdminController
     {
         $this->requireAuth();
 
+        $search = trim((string) $request->query('q', ''));
+        $page = max(1, (int) $request->query('page', 1));
+        $perPage = 12;
         $pages = [];
+        $pagination = $this->buildPagination(0, $page, $perPage);
         try {
             $pdo = Database::connection();
-            $stmt = $pdo->query(
+            $params = [];
+            $where = '';
+            if ($search !== '') {
+                $where = ' WHERE p.title LIKE :search OR p.slug LIKE :search OR p.template_key LIKE :search';
+                $params['search'] = '%' . $search . '%';
+            }
+
+            $countStmt = $pdo->prepare('SELECT COUNT(*) FROM pages p' . $where);
+            $countStmt->execute($params);
+            $total = (int) ($countStmt->fetchColumn() ?: 0);
+            $pagination = $this->buildPagination($total, $page, $perPage);
+
+            $stmt = $pdo->prepare(
                 'SELECT p.id, p.title, p.slug, p.template_key, p.is_published, p.updated_at,
                         COUNT(ps.id) AS section_count
                  FROM pages p
                  LEFT JOIN page_sections ps ON ps.page_id = p.id
+                 ' . $where . '
                  GROUP BY p.id
-                 ORDER BY p.id ASC'
+                 ORDER BY p.id ASC
+                 LIMIT :limit OFFSET :offset'
             );
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(':' . $key, $value);
+            }
+            $stmt->bindValue(':limit', $pagination['per_page'], \PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $pagination['offset'], \PDO::PARAM_INT);
+            $stmt->execute();
             $pages = $stmt->fetchAll() ?: [];
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to load pages: ' . $exception->getMessage());
@@ -37,6 +61,8 @@ final class PageAdminController extends BaseAdminController
                 'description' => 'Manage editable content blocks per page.',
             ],
             'pages' => $pages,
+            'search' => $search,
+            'pagination' => $pagination,
         ]);
     }
 

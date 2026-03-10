@@ -9,6 +9,10 @@ declare(strict_types=1);
         </div>
     </div>
 
+    <form class="mb-6" method="get" action="<?= e(path_url('/admin/pages')) ?>">
+        <input class="w-full md:w-96 rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary" type="search" name="q" placeholder="Search by title, slug, template..." value="<?= e((string) ($search ?? '')) ?>">
+    </form>
+
     <div class="overflow-x-auto">
         <table class="min-w-full text-sm">
             <thead>
@@ -43,5 +47,11 @@ declare(strict_types=1);
             </tbody>
         </table>
     </div>
-</section>
 
+    <?php
+    $basePath = '/admin/pages';
+    $query = ['q' => (string) ($search ?? '')];
+    $pageKey = 'page';
+    require BASE_PATH . '/templates/admin/partials/pagination.php';
+    ?>
+</section>

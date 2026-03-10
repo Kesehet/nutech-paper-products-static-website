@@ -82,3 +82,15 @@ if (!function_exists('slugify')) {
         return $value === '' ? 'item' : $value;
     }
 }
+
+if (!function_exists('query_url')) {
+    function query_url(string $path, array $query = []): string
+    {
+        $url = path_url($path);
+        $query = array_filter($query, static fn (mixed $value): bool => $value !== null && $value !== '');
+        if ($query === []) {
+            return $url;
+        }
+        return $url . '?' . http_build_query($query);
+    }
+}

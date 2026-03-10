@@ -21,6 +21,19 @@ spl_autoload_register(static function (string $class): void {
 
 App\Core\Env::load(BASE_PATH . '/.env');
 
+// Keep public logo in sync with root logo file when present.
+$rootLogo = BASE_PATH . '/nutech_square_logo.png';
+$publicLogoDir = BASE_PATH . '/public/assets/img';
+$publicLogo = $publicLogoDir . '/logo.png';
+if (is_file($rootLogo)) {
+    if (!is_dir($publicLogoDir)) {
+        @mkdir($publicLogoDir, 0775, true);
+    }
+    if (!is_file($publicLogo) || filemtime($rootLogo) > (filemtime($publicLogo) ?: 0)) {
+        @copy($rootLogo, $publicLogo);
+    }
+}
+
 // First-time installer: if users table is missing or empty, auto-apply schema + seed.
 App\Core\AutoSync::runIfRequired();
 

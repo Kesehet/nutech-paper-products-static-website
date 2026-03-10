@@ -67,10 +67,67 @@ declare(strict_types=1);
 
         <div>
             <label class="block text-sm font-semibold mb-2">Schema JSON-LD</label>
-            <textarea class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary font-mono text-xs" rows="6" name="schema_json"><?= e((string) ($seo['schema_json'] ?? '')) ?></textarea>
+            <textarea id="schema-json" class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary font-mono text-xs" rows="6" name="schema_json"><?= e((string) ($seo['schema_json'] ?? '')) ?></textarea>
+            <div class="mt-2 flex items-center gap-2">
+                <button type="button" id="format-schema-btn" class="px-3 py-1.5 rounded border border-slate-300 text-xs font-semibold hover:bg-slate-50">Format JSON</button>
+                <button type="button" id="validate-schema-btn" class="px-3 py-1.5 rounded border border-slate-300 text-xs font-semibold hover:bg-slate-50">Validate JSON</button>
+                <span id="schema-json-status" class="text-xs text-slate-500"></span>
+            </div>
         </div>
 
         <button class="px-6 py-3 bg-primary text-dark-navy rounded-xl font-bold hover:bg-primary-hover transition-colors" type="submit">Save SEO</button>
     </form>
 </section>
 
+<script>
+(() => {
+    const field = document.getElementById("schema-json");
+    const status = document.getElementById("schema-json-status");
+    const formatBtn = document.getElementById("format-schema-btn");
+    const validateBtn = document.getElementById("validate-schema-btn");
+    if (!field || !status || !formatBtn || !validateBtn) {
+        return;
+    }
+
+    function parseJson(value) {
+        const trimmed = (value || "").trim();
+        if (trimmed === "") {
+            return { ok: true, empty: true, value: null };
+        }
+        try {
+            const parsed = JSON.parse(trimmed);
+            return { ok: true, empty: false, value: parsed };
+        } catch (error) {
+            return { ok: false, empty: false, error: error };
+        }
+    }
+
+    formatBtn.addEventListener("click", () => {
+        const result = parseJson(field.value);
+        if (!result.ok) {
+            status.textContent = "Invalid JSON.";
+            status.className = "text-xs text-red-600";
+            return;
+        }
+        if (result.empty) {
+            status.textContent = "Empty schema field.";
+            status.className = "text-xs text-slate-500";
+            return;
+        }
+        field.value = JSON.stringify(result.value, null, 2);
+        status.textContent = "JSON formatted.";
+        status.className = "text-xs text-emerald-600";
+    });
+
+    validateBtn.addEventListener("click", () => {
+        const result = parseJson(field.value);
+        if (!result.ok) {
+            status.textContent = "Invalid JSON.";
+            status.className = "text-xs text-red-600";
+            return;
+        }
+        status.textContent = result.empty ? "Empty (allowed)." : "Valid JSON.";
+        status.className = "text-xs text-emerald-600";
+    });
+})();
+</script>

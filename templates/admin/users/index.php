@@ -40,6 +40,9 @@ declare(strict_types=1);
 
     <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8">
         <h3 class="text-xl font-black text-dark-navy mb-4">Existing Users</h3>
+        <form class="mb-4" method="get" action="<?= e(path_url('/admin/users')) ?>">
+            <input class="w-full md:w-96 rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary" type="search" name="q" placeholder="Search users..." value="<?= e((string) ($search ?? '')) ?>">
+        </form>
         <div class="space-y-4">
             <?php foreach ($users as $userRow): ?>
                 <div class="rounded-xl border border-slate-200 p-4">
@@ -89,5 +92,11 @@ declare(strict_types=1);
                 </div>
             <?php endforeach; ?>
         </div>
+        <?php
+        $basePath = '/admin/users';
+        $query = ['q' => (string) ($search ?? '')];
+        $pageKey = 'page';
+        require BASE_PATH . '/templates/admin/partials/pagination.php';
+        ?>
     </div>
 </section>

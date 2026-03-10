@@ -19,6 +19,9 @@ declare(strict_types=1);
 
     <div class="bg-white border border-slate-200 rounded-2xl p-6 md:p-8">
         <h3 class="text-xl font-black text-dark-navy mb-4">Uploaded Files</h3>
+        <form class="mb-4" method="get" action="<?= e(path_url('/admin/media')) ?>">
+            <input class="w-full md:w-96 rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary" type="search" name="q" placeholder="Search filename, type, or path..." value="<?= e((string) ($search ?? '')) ?>">
+        </form>
         <div class="overflow-x-auto">
             <table class="min-w-full text-sm">
                 <thead>
@@ -67,6 +70,11 @@ declare(strict_types=1);
                 </tbody>
             </table>
         </div>
+        <?php
+        $basePath = '/admin/media';
+        $query = ['q' => (string) ($search ?? '')];
+        $pageKey = 'page';
+        require BASE_PATH . '/templates/admin/partials/pagination.php';
+        ?>
     </div>
 </section>
-

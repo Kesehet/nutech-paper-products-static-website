@@ -16,10 +16,18 @@ final class SeoAdminController extends BaseAdminController
     {
         $this->requireAuth();
 
+        $pageSearch = trim((string) $request->query('page_q', ''));
+        $productSearch = trim((string) $request->query('product_q', ''));
+        $pageListPage = max(1, (int) $request->query('page_page', 1));
+        $productListPage = max(1, (int) $request->query('product_page', 1));
+        $perPage = 12;
+
         $pages = [];
         $products = [];
         $globalSeo = $this->emptySeo('global', 0);
         $scripts = [];
+        $pagePagination = $this->buildPagination(0, $pageListPage, $perPage);
+        $productPagination = $this->buildPagination(0, $productListPage, $perPage);
 
         try {
             $pdo = Database::connection();
@@ -31,23 +39,60 @@ final class SeoAdminController extends BaseAdminController
                 $globalSeo = $globalRow;
             }
 
-            $pagesStmt = $pdo->query(
+            $pageParams = [];
+            $pageWhere = '';
+            if ($pageSearch !== '') {
+                $pageWhere = ' WHERE p.title LIKE :page_search OR p.slug LIKE :page_search';
+                $pageParams['page_search'] = '%' . $pageSearch . '%';
+            }
+            $pageCountStmt = $pdo->prepare('SELECT COUNT(*) FROM pages p' . $pageWhere);
+            $pageCountStmt->execute($pageParams);
+            $pageTotal = (int) ($pageCountStmt->fetchColumn() ?: 0);
+            $pagePagination = $this->buildPagination($pageTotal, $pageListPage, $perPage);
+
+            $pagesStmt = $pdo->prepare(
                 'SELECT p.id, p.title, p.slug,
                         CASE WHEN sm.id IS NULL THEN 0 ELSE 1 END AS has_seo
                  FROM pages p
                  LEFT JOIN seo_meta sm ON sm.entity_type = "page" AND sm.entity_id = p.id
-                 ORDER BY p.id ASC'
+                 ' . $pageWhere . '
+                 ORDER BY p.id ASC
+                 LIMIT :limit OFFSET :offset'
             );
+            foreach ($pageParams as $key => $value) {
+                $pagesStmt->bindValue(':' . $key, $value);
+            }
+            $pagesStmt->bindValue(':limit', $pagePagination['per_page'], \PDO::PARAM_INT);
+            $pagesStmt->bindValue(':offset', $pagePagination['offset'], \PDO::PARAM_INT);
+            $pagesStmt->execute();
             $pages = $pagesStmt->fetchAll() ?: [];
 
-            $productsStmt = $pdo->query(
+            $productParams = [];
+            $productWhere = '';
+            if ($productSearch !== '') {
+                $productWhere = ' WHERE p.title LIKE :product_search OR p.slug LIKE :product_search';
+                $productParams['product_search'] = '%' . $productSearch . '%';
+            }
+            $productCountStmt = $pdo->prepare('SELECT COUNT(*) FROM products p' . $productWhere);
+            $productCountStmt->execute($productParams);
+            $productTotal = (int) ($productCountStmt->fetchColumn() ?: 0);
+            $productPagination = $this->buildPagination($productTotal, $productListPage, $perPage);
+
+            $productsStmt = $pdo->prepare(
                 'SELECT p.id, p.title, p.slug,
                         CASE WHEN sm.id IS NULL THEN 0 ELSE 1 END AS has_seo
                  FROM products p
                  LEFT JOIN seo_meta sm ON sm.entity_type = "product" AND sm.entity_id = p.id
+                 ' . $productWhere . '
                  ORDER BY p.id DESC
-                 LIMIT 100'
+                 LIMIT :limit OFFSET :offset'
             );
+            foreach ($productParams as $key => $value) {
+                $productsStmt->bindValue(':' . $key, $value);
+            }
+            $productsStmt->bindValue(':limit', $productPagination['per_page'], \PDO::PARAM_INT);
+            $productsStmt->bindValue(':offset', $productPagination['offset'], \PDO::PARAM_INT);
+            $productsStmt->execute();
             $products = $productsStmt->fetchAll() ?: [];
 
             $scriptsStmt = $pdo->query(
@@ -70,6 +115,10 @@ final class SeoAdminController extends BaseAdminController
             'globalSeo' => $globalSeo,
             'scripts' => $scripts,
             'isAdmin' => Auth::hasRole('admin'),
+            'pageSearch' => $pageSearch,
+            'productSearch' => $productSearch,
+            'pagePagination' => $pagePagination,
+            'productPagination' => $productPagination,
         ]);
     }
 

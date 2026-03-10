@@ -16,16 +16,40 @@ final class MediaAdminController extends BaseAdminController
     {
         $this->requireAuth();
 
+        $search = trim((string) $request->query('q', ''));
+        $page = max(1, (int) $request->query('page', 1));
+        $perPage = 20;
         $media = [];
+        $pagination = $this->buildPagination(0, $page, $perPage);
         try {
             $pdo = Database::connection();
-            $stmt = $pdo->query(
+            $params = [];
+            $where = '';
+            if ($search !== '') {
+                $where = ' WHERE m.original_name LIKE :search OR m.mime_type LIKE :search OR m.storage_path LIKE :search';
+                $params['search'] = '%' . $search . '%';
+            }
+
+            $countStmt = $pdo->prepare('SELECT COUNT(*) FROM media m' . $where);
+            $countStmt->execute($params);
+            $total = (int) ($countStmt->fetchColumn() ?: 0);
+            $pagination = $this->buildPagination($total, $page, $perPage);
+
+            $stmt = $pdo->prepare(
                 'SELECT m.id, m.file_name, m.original_name, m.storage_path, m.mime_type, m.size_bytes, m.width, m.height, m.created_at,
                         u.full_name AS uploaded_by_name
                  FROM media m
                  LEFT JOIN users u ON u.id = m.uploaded_by
-                 ORDER BY m.id DESC'
+                 ' . $where . '
+                 ORDER BY m.id DESC
+                 LIMIT :limit OFFSET :offset'
             );
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(':' . $key, $value);
+            }
+            $stmt->bindValue(':limit', $pagination['per_page'], \PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $pagination['offset'], \PDO::PARAM_INT);
+            $stmt->execute();
             $media = $stmt->fetchAll() ?: [];
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to load media library: ' . $exception->getMessage());
@@ -37,6 +61,8 @@ final class MediaAdminController extends BaseAdminController
                 'description' => 'Upload and manage reusable media assets.',
             ],
             'media' => $media,
+            'search' => $search,
+            'pagination' => $pagination,
         ]);
     }
 

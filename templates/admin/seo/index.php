@@ -43,6 +43,11 @@ foreach ($scripts as $scriptRow) {
     <div class="grid lg:grid-cols-2 gap-6">
         <div class="bg-white border border-slate-200 rounded-2xl p-6">
             <h3 class="text-xl font-black text-dark-navy mb-4">Page SEO</h3>
+            <form class="mb-3" method="get" action="<?= e(path_url('/admin/seo')) ?>">
+                <input type="hidden" name="product_q" value="<?= e((string) ($productSearch ?? '')) ?>">
+                <input type="hidden" name="product_page" value="<?= e((string) ($productPagination['page'] ?? 1)) ?>">
+                <input class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary text-sm" type="search" name="page_q" placeholder="Search pages..." value="<?= e((string) ($pageSearch ?? '')) ?>">
+            </form>
             <ul class="space-y-2">
                 <?php foreach ($pages as $row): ?>
                 <li class="flex items-center justify-between gap-3 rounded-lg border border-slate-100 p-3">
@@ -56,10 +61,26 @@ foreach ($scripts as $scriptRow) {
                 </li>
                 <?php endforeach; ?>
             </ul>
+            <?php
+            $pagination = $pagePagination ?? [];
+            $basePath = '/admin/seo';
+            $query = [
+                'page_q' => (string) ($pageSearch ?? ''),
+                'product_q' => (string) ($productSearch ?? ''),
+                'product_page' => (string) ($productPagination['page'] ?? 1),
+            ];
+            $pageKey = 'page_page';
+            require BASE_PATH . '/templates/admin/partials/pagination.php';
+            ?>
         </div>
 
         <div class="bg-white border border-slate-200 rounded-2xl p-6">
             <h3 class="text-xl font-black text-dark-navy mb-4">Product SEO</h3>
+            <form class="mb-3" method="get" action="<?= e(path_url('/admin/seo')) ?>">
+                <input type="hidden" name="page_q" value="<?= e((string) ($pageSearch ?? '')) ?>">
+                <input type="hidden" name="page_page" value="<?= e((string) ($pagePagination['page'] ?? 1)) ?>">
+                <input class="w-full rounded-xl border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary text-sm" type="search" name="product_q" placeholder="Search products..." value="<?= e((string) ($productSearch ?? '')) ?>">
+            </form>
             <ul class="space-y-2 max-h-96 overflow-auto pr-1">
                 <?php foreach ($products as $row): ?>
                 <li class="flex items-center justify-between gap-3 rounded-lg border border-slate-100 p-3">
@@ -73,6 +94,17 @@ foreach ($scripts as $scriptRow) {
                 </li>
                 <?php endforeach; ?>
             </ul>
+            <?php
+            $pagination = $productPagination ?? [];
+            $basePath = '/admin/seo';
+            $query = [
+                'page_q' => (string) ($pageSearch ?? ''),
+                'product_q' => (string) ($productSearch ?? ''),
+                'page_page' => (string) ($pagePagination['page'] ?? 1),
+            ];
+            $pageKey = 'product_page';
+            require BASE_PATH . '/templates/admin/partials/pagination.php';
+            ?>
         </div>
     </div>
 
@@ -103,4 +135,3 @@ foreach ($scripts as $scriptRow) {
         <button class="px-5 py-3 bg-primary text-dark-navy rounded-xl font-bold hover:bg-primary-hover transition-colors disabled:opacity-50" type="submit" <?= $isAdmin ? '' : 'disabled' ?>>Save Script Injection</button>
     </form>
 </section>
-

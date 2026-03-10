@@ -69,4 +69,25 @@ abstract class BaseAdminController
             (string) ($request->server('HTTP_USER_AGENT', '') ?: '')
         );
     }
+
+    /**
+     * @return array{page:int,per_page:int,total:int,total_pages:int,offset:int,has_prev:bool,has_next:bool}
+     */
+    protected function buildPagination(int $total, int $page, int $perPage): array
+    {
+        $safePerPage = max(1, $perPage);
+        $totalPages = max(1, (int) ceil($total / $safePerPage));
+        $safePage = max(1, min($page, $totalPages));
+        $offset = ($safePage - 1) * $safePerPage;
+
+        return [
+            'page' => $safePage,
+            'per_page' => $safePerPage,
+            'total' => $total,
+            'total_pages' => $totalPages,
+            'offset' => $offset,
+            'has_prev' => $safePage > 1,
+            'has_next' => $safePage < $totalPages,
+        ];
+    }
 }

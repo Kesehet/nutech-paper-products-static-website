@@ -16,8 +16,12 @@ final class UserAdminController extends BaseAdminController
     {
         $this->requireAdmin();
 
+        $search = trim((string) $request->query('q', ''));
+        $page = max(1, (int) $request->query('page', 1));
+        $perPage = 10;
         $users = [];
         $roles = [];
+        $pagination = $this->buildPagination(0, $page, $perPage);
 
         try {
             $pdo = Database::connection();
@@ -25,12 +29,36 @@ final class UserAdminController extends BaseAdminController
             $roleStmt = $pdo->query('SELECT id, name, slug FROM roles ORDER BY id ASC');
             $roles = $roleStmt->fetchAll() ?: [];
 
-            $userStmt = $pdo->query(
+            $params = [];
+            $where = '';
+            if ($search !== '') {
+                $where = ' WHERE u.full_name LIKE :search OR u.email LIKE :search OR r.name LIKE :search';
+                $params['search'] = '%' . $search . '%';
+            }
+
+            $countStmt = $pdo->prepare(
+                'SELECT COUNT(*)
+                 FROM users u
+                 INNER JOIN roles r ON r.id = u.role_id' . $where
+            );
+            $countStmt->execute($params);
+            $total = (int) ($countStmt->fetchColumn() ?: 0);
+            $pagination = $this->buildPagination($total, $page, $perPage);
+
+            $userStmt = $pdo->prepare(
                 'SELECT u.id, u.full_name, u.email, u.is_active, u.created_at, u.last_login_at, r.name AS role_name, r.slug AS role_slug, r.id AS role_id
                  FROM users u
                  INNER JOIN roles r ON r.id = u.role_id
-                 ORDER BY u.id ASC'
+                 ' . $where . '
+                 ORDER BY u.id ASC
+                 LIMIT :limit OFFSET :offset'
             );
+            foreach ($params as $key => $value) {
+                $userStmt->bindValue(':' . $key, $value);
+            }
+            $userStmt->bindValue(':limit', $pagination['per_page'], \PDO::PARAM_INT);
+            $userStmt->bindValue(':offset', $pagination['offset'], \PDO::PARAM_INT);
+            $userStmt->execute();
             $users = $userStmt->fetchAll() ?: [];
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to load users: ' . $exception->getMessage());
@@ -43,6 +71,8 @@ final class UserAdminController extends BaseAdminController
             ],
             'users' => $users,
             'roles' => $roles,
+            'search' => $search,
+            'pagination' => $pagination,
         ]);
     }
 

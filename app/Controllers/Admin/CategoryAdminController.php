@@ -15,17 +15,41 @@ final class CategoryAdminController extends BaseAdminController
     {
         $this->requireAuth();
 
+        $search = trim((string) $request->query('q', ''));
+        $page = max(1, (int) $request->query('page', 1));
+        $perPage = 10;
         $categories = [];
+        $pagination = $this->buildPagination(0, $page, $perPage);
         try {
             $pdo = Database::connection();
-            $stmt = $pdo->query(
+            $params = [];
+            $where = '';
+            if ($search !== '') {
+                $where = ' WHERE c.name LIKE :search OR c.slug LIKE :search OR c.description LIKE :search';
+                $params['search'] = '%' . $search . '%';
+            }
+
+            $countStmt = $pdo->prepare('SELECT COUNT(*) FROM product_categories c' . $where);
+            $countStmt->execute($params);
+            $total = (int) ($countStmt->fetchColumn() ?: 0);
+            $pagination = $this->buildPagination($total, $page, $perPage);
+
+            $stmt = $pdo->prepare(
                 'SELECT c.id, c.name, c.slug, c.description, c.sort_order, c.is_active,
                         COUNT(p.id) AS product_count
                  FROM product_categories c
                  LEFT JOIN products p ON p.category_id = c.id
+                 ' . $where . '
                  GROUP BY c.id
-                 ORDER BY c.sort_order ASC, c.id ASC'
+                 ORDER BY c.sort_order ASC, c.id ASC
+                 LIMIT :limit OFFSET :offset'
             );
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(':' . $key, $value);
+            }
+            $stmt->bindValue(':limit', $pagination['per_page'], \PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $pagination['offset'], \PDO::PARAM_INT);
+            $stmt->execute();
             $categories = $stmt->fetchAll() ?: [];
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to load categories: ' . $exception->getMessage());
@@ -37,6 +61,8 @@ final class CategoryAdminController extends BaseAdminController
                 'description' => 'Manage product categories and ordering.',
             ],
             'categories' => $categories,
+            'search' => $search,
+            'pagination' => $pagination,
         ]);
     }
 

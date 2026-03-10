@@ -17,10 +17,17 @@ final class ProductAdminController extends BaseAdminController
         $this->requireAuth();
 
         $search = trim((string) $request->query('q', ''));
+        $page = max(1, (int) $request->query('page', 1));
+        $perPage = 15;
         $products = [];
+        $pagination = $this->buildPagination(0, $page, $perPage);
 
         try {
             $pdo = Database::connection();
+            $countSql = 'SELECT COUNT(*)
+                         FROM products p
+                         LEFT JOIN product_categories c ON c.id = p.category_id';
+
             $sql = 'SELECT p.id, p.title, p.slug, p.status, p.sort_order, p.updated_at,
                            c.name AS category_name
                     FROM products p
@@ -28,13 +35,25 @@ final class ProductAdminController extends BaseAdminController
 
             $params = [];
             if ($search !== '') {
-                $sql .= ' WHERE p.title LIKE :search OR p.slug LIKE :search';
+                $where = ' WHERE p.title LIKE :search OR p.slug LIKE :search';
+                $countSql .= $where;
+                $sql .= $where;
                 $params['search'] = '%' . $search . '%';
             }
 
-            $sql .= ' ORDER BY p.sort_order ASC, p.id DESC';
+            $countStmt = $pdo->prepare($countSql);
+            $countStmt->execute($params);
+            $total = (int) ($countStmt->fetchColumn() ?: 0);
+            $pagination = $this->buildPagination($total, $page, $perPage);
+
+            $sql .= ' ORDER BY p.sort_order ASC, p.id DESC LIMIT :limit OFFSET :offset';
             $stmt = $pdo->prepare($sql);
-            $stmt->execute($params);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(':' . $key, $value);
+            }
+            $stmt->bindValue(':limit', $pagination['per_page'], \PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $pagination['offset'], \PDO::PARAM_INT);
+            $stmt->execute();
             $products = $stmt->fetchAll() ?: [];
         } catch (PDOException $exception) {
             Session::flash('error', 'Unable to load products: ' . $exception->getMessage());
@@ -47,6 +66,7 @@ final class ProductAdminController extends BaseAdminController
             ],
             'products' => $products,
             'search' => $search,
+            'pagination' => $pagination,
         ]);
     }
 

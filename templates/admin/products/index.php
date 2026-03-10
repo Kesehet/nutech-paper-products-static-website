@@ -53,5 +53,11 @@ declare(strict_types=1);
             </tbody>
         </table>
     </div>
-</section>
 
+    <?php
+    $basePath = '/admin/products';
+    $query = ['q' => (string) ($search ?? '')];
+    $pageKey = 'page';
+    require BASE_PATH . '/templates/admin/partials/pagination.php';
+    ?>
+</section>
