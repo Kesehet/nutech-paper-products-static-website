@@ -29,6 +29,25 @@ declare(strict_types=1);
 
         <div class="space-y-5">
             <?php foreach ($sections as $index => $section): ?>
+                <?php
+                $sectionJsonRaw = (string) ($section['content_json'] ?? '{}');
+                $decoded = json_decode($sectionJsonRaw, true);
+                $simplePairs = [];
+                $supportsKeyValue = is_array($decoded);
+                if ($supportsKeyValue) {
+                    foreach ($decoded as $k => $v) {
+                        if (!is_scalar($v) && $v !== null) {
+                            $supportsKeyValue = false;
+                            break;
+                        }
+                    }
+                }
+                if ($supportsKeyValue && is_array($decoded)) {
+                    foreach ($decoded as $k => $v) {
+                        $simplePairs[] = ['key' => (string) $k, 'value' => $v === null ? '' : (string) $v];
+                    }
+                }
+                ?>
                 <div class="rounded-xl border border-slate-200 p-4 space-y-3">
                     <input type="hidden" name="section_id[]" value="<?= e((string) ($section['id'] ?? '')) ?>">
                     <div class="grid md:grid-cols-4 gap-3">
@@ -52,9 +71,37 @@ declare(strict_types=1);
                             </select>
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">Content JSON</label>
-                        <textarea class="w-full rounded-lg border-slate-200 bg-slate-50 text-sm font-mono" rows="6" name="section_content[]"><?= e((string) ($section['content_json'] ?? '{}')) ?></textarea>
+
+                    <div data-section-editor>
+                        <label class="block text-xs font-semibold text-slate-500 mb-2">Content Fields</label>
+                        <?php if ($supportsKeyValue): ?>
+                            <div class="space-y-2" data-kv-list>
+                                <?php if ($simplePairs === []): ?>
+                                    <div class="grid md:grid-cols-2 gap-2" data-kv-row>
+                                        <input class="rounded-lg border-slate-200 bg-slate-50 text-sm" type="text" placeholder="key" data-kv-key>
+                                        <input class="rounded-lg border-slate-200 bg-slate-50 text-sm" type="text" placeholder="value" data-kv-value>
+                                    </div>
+                                <?php else: ?>
+                                    <?php foreach ($simplePairs as $pair): ?>
+                                        <div class="grid md:grid-cols-2 gap-2" data-kv-row>
+                                            <input class="rounded-lg border-slate-200 bg-slate-50 text-sm" type="text" value="<?= e((string) $pair['key']) ?>" data-kv-key>
+                                            <input class="rounded-lg border-slate-200 bg-slate-50 text-sm" type="text" value="<?= e((string) $pair['value']) ?>" data-kv-value>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                            <button class="mt-2 text-xs font-semibold text-primary hover:underline" type="button" data-add-kv>Add Field</button>
+                        <?php else: ?>
+                            <p class="text-xs text-amber-600 mb-2">This section contains nested JSON. Use Advanced JSON editor for this block.</p>
+                        <?php endif; ?>
+
+                        <details class="mt-3">
+                            <summary class="cursor-pointer text-xs font-semibold text-slate-600">Advanced JSON</summary>
+                            <textarea class="mt-2 w-full rounded-lg border-slate-200 bg-slate-50 text-sm font-mono" rows="7" <?= $supportsKeyValue ? '' : 'name="section_content[]"' ?> data-json-target><?= e($sectionJsonRaw) ?></textarea>
+                        </details>
+                        <?php if ($supportsKeyValue): ?>
+                            <textarea class="hidden" name="section_content[]" data-json-target><?= e($sectionJsonRaw) ?></textarea>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -98,4 +145,97 @@ declare(strict_types=1);
         </div>
     </form>
 </section>
+<script>
+(() => {
+    function parseMaybeJson(value) {
+        try {
+            const parsed = JSON.parse(value);
+            return typeof parsed === "object" && parsed !== null ? parsed : {};
+        } catch (_) {
+            return {};
+        }
+    }
 
+    document.querySelectorAll("[data-section-editor]").forEach((editor) => {
+        const list = editor.querySelector("[data-kv-list]");
+        const addBtn = editor.querySelector("[data-add-kv]");
+        const jsonTargets = editor.querySelectorAll("[data-json-target]");
+        if (!list || jsonTargets.length === 0) {
+            return;
+        }
+
+        const sync = () => {
+            const payload = {};
+            list.querySelectorAll("[data-kv-row]").forEach((row) => {
+                const keyEl = row.querySelector("[data-kv-key]");
+                const valueEl = row.querySelector("[data-kv-value]");
+                if (!keyEl || !valueEl) {
+                    return;
+                }
+                const key = (keyEl.value || "").trim();
+                if (key === "") {
+                    return;
+                }
+                payload[key] = valueEl.value || "";
+            });
+            const json = JSON.stringify(payload, null, 2);
+            jsonTargets.forEach((target) => {
+                target.value = json;
+            });
+        };
+
+        jsonTargets.forEach((target) => {
+            target.addEventListener("input", () => {
+                const current = target.value || "{}";
+                jsonTargets.forEach((other) => {
+                    if (other !== target) {
+                        other.value = current;
+                    }
+                });
+            });
+        });
+
+        const bindRow = (row) => {
+            row.querySelectorAll("input").forEach((input) => {
+                input.addEventListener("input", sync);
+            });
+        };
+
+        list.querySelectorAll("[data-kv-row]").forEach(bindRow);
+
+        if (addBtn) {
+            addBtn.addEventListener("click", () => {
+                const row = document.createElement("div");
+                row.className = "grid md:grid-cols-2 gap-2";
+                row.setAttribute("data-kv-row", "");
+                row.innerHTML = `
+                    <input class="rounded-lg border-slate-200 bg-slate-50 text-sm" type="text" placeholder="key" data-kv-key>
+                    <input class="rounded-lg border-slate-200 bg-slate-50 text-sm" type="text" placeholder="value" data-kv-value>
+                `;
+                list.appendChild(row);
+                bindRow(row);
+            });
+        }
+
+        const firstTarget = jsonTargets[0];
+        if (firstTarget && list.querySelectorAll("[data-kv-row]").length === 0) {
+            const parsed = parseMaybeJson(firstTarget.value || "{}");
+            Object.keys(parsed).forEach((key) => {
+                const row = document.createElement("div");
+                row.className = "grid md:grid-cols-2 gap-2";
+                row.setAttribute("data-kv-row", "");
+                row.innerHTML = `
+                    <input class="rounded-lg border-slate-200 bg-slate-50 text-sm" type="text" data-kv-key>
+                    <input class="rounded-lg border-slate-200 bg-slate-50 text-sm" type="text" data-kv-value>
+                `;
+                row.querySelector("[data-kv-key]").value = key;
+                row.querySelector("[data-kv-value]").value = String(parsed[key] ?? "");
+                list.appendChild(row);
+                bindRow(row);
+            });
+        }
+
+        sync();
+    });
+})();
+</script>

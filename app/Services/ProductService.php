@@ -12,9 +12,11 @@ final class ProductService
     {
         try {
             $pdo = Database::connection();
-            $sql = 'SELECT p.id, p.title, p.slug, p.short_description, p.status, c.name AS category_name
+            $sql = 'SELECT p.id, p.title, p.slug, p.short_description, p.status, c.name AS category_name,
+                           m.storage_path AS featured_image_path
                     FROM products p
                     LEFT JOIN product_categories c ON c.id = p.category_id
+                    LEFT JOIN media m ON m.id = p.featured_image_id
                     WHERE p.status = "published"';
             $params = [];
 
@@ -41,9 +43,11 @@ final class ProductService
         try {
             $pdo = Database::connection();
             $stmt = $pdo->prepare(
-                'SELECT p.*, c.name AS category_name, c.slug AS category_slug
+                'SELECT p.*, c.name AS category_name, c.slug AS category_slug,
+                        m.storage_path AS featured_image_path
                  FROM products p
                  LEFT JOIN product_categories c ON c.id = p.category_id
+                 LEFT JOIN media m ON m.id = p.featured_image_id
                  WHERE p.slug = :slug AND p.status = "published"
                  LIMIT 1'
             );
@@ -54,7 +58,7 @@ final class ProductService
             }
 
             $imagesStmt = $pdo->prepare(
-                'SELECT pi.id, pi.alt_text, m.storage_path
+                'SELECT pi.id, pi.alt_text, pi.is_primary, m.storage_path
                  FROM product_images pi
                  INNER JOIN media m ON m.id = pi.media_id
                  WHERE pi.product_id = :product_id
@@ -114,6 +118,7 @@ final class ProductService
                 'slug' => 'pre-gummed-paper',
                 'short_description' => 'Reliable pre-gummed stock for high-volume converting.',
                 'category_name' => 'Adhesive Papers',
+                'featured_image_path' => '',
                 'status' => 'published',
             ],
             [
@@ -122,6 +127,7 @@ final class ProductService
                 'slug' => 'holographic-cold-foil',
                 'short_description' => 'High-impact foil substrate for premium print applications.',
                 'category_name' => 'Specialty Foils',
+                'featured_image_path' => '',
                 'status' => 'published',
             ],
             [
@@ -130,6 +136,7 @@ final class ProductService
                 'slug' => 'pressure-sensitive-paper',
                 'short_description' => 'Pressure sensitive paper for durable label performance.',
                 'category_name' => 'Label Stocks',
+                'featured_image_path' => '',
                 'status' => 'published',
             ],
             [
@@ -138,6 +145,7 @@ final class ProductService
                 'slug' => 'cck-release-paper',
                 'short_description' => 'Clay-coated kraft release liner for industrial adhesive use.',
                 'category_name' => 'Release Papers',
+                'featured_image_path' => '',
                 'status' => 'published',
             ],
             [
@@ -146,9 +154,9 @@ final class ProductService
                 'slug' => 'glassine-release-paper',
                 'short_description' => 'Smooth translucent release paper with consistent peel properties.',
                 'category_name' => 'Release Papers',
+                'featured_image_path' => '',
                 'status' => 'published',
             ],
         ];
     }
 }
-

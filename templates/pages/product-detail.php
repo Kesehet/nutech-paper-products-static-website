@@ -2,6 +2,13 @@
 declare(strict_types=1);
 ?>
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <?php
+    $gallery = is_array($product['gallery'] ?? null) ? $product['gallery'] : [];
+    $mainImage = (string) ($product['featured_image_path'] ?? '');
+    if ($mainImage === '' && count($gallery) > 0) {
+        $mainImage = (string) ($gallery[0]['storage_path'] ?? '');
+    }
+    ?>
     <nav class="flex items-center gap-2 text-sm text-slate-500 mb-8">
         <a class="hover:text-primary" href="<?= e(path_url('/')) ?>">Home</a>
         <span>/</span>
@@ -12,7 +19,11 @@ declare(strict_types=1);
 
     <div class="grid lg:grid-cols-2 gap-10 items-start">
         <div class="rounded-2xl overflow-hidden border border-slate-200 bg-white">
-            <div class="h-[420px] bg-slate-100"></div>
+            <?php if ($mainImage !== ''): ?>
+                <img src="<?= e(path_url($mainImage)) ?>" alt="<?= e((string) ($product['title'] ?? 'Product')) ?>" class="w-full h-[420px] object-cover">
+            <?php else: ?>
+                <div class="h-[420px] bg-slate-100"></div>
+            <?php endif; ?>
         </div>
         <div>
             <span class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4">
@@ -25,6 +36,15 @@ declare(strict_types=1);
             </a>
         </div>
     </div>
+    <?php if (!empty($gallery)): ?>
+    <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+        <?php foreach ($gallery as $image): ?>
+        <div class="rounded-lg overflow-hidden border border-slate-200 bg-white">
+            <img src="<?= e(path_url((string) ($image['storage_path'] ?? ''))) ?>" alt="<?= e((string) ($image['alt_text'] ?? ($product['title'] ?? 'Product image'))) ?>" class="w-full h-24 object-cover">
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
 
     <div class="mt-14 grid lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-10">
@@ -80,7 +100,11 @@ declare(strict_types=1);
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <?php foreach ($relatedProducts as $item): ?>
             <article class="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                <div class="h-32 bg-slate-100"></div>
+                <?php if (!empty($item['featured_image_path'])): ?>
+                    <img src="<?= e(path_url((string) $item['featured_image_path'])) ?>" alt="<?= e((string) ($item['title'] ?? '')) ?>" class="h-32 w-full object-cover">
+                <?php else: ?>
+                    <div class="h-32 bg-slate-100"></div>
+                <?php endif; ?>
                 <div class="p-5">
                     <h4 class="font-bold text-slate-900 mb-2"><?= e((string) ($item['title'] ?? '')) ?></h4>
                     <a class="text-sm font-semibold text-primary hover:underline" href="<?= e(path_url('/product/' . (string) ($item['slug'] ?? ''))) ?>">View Details</a>

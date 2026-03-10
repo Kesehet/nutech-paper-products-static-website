@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Controllers\Admin\AuthController;
+use App\Controllers\Admin\CategoryAdminController;
 use App\Controllers\Admin\DashboardController;
 use App\Controllers\Admin\MediaAdminController;
 use App\Controllers\Admin\PageAdminController;
@@ -26,6 +27,11 @@ $router->post('/admin/products/store', [ProductAdminController::class, 'store'])
 $router->get('/admin/products/{id}/edit', [ProductAdminController::class, 'edit']);
 $router->post('/admin/products/{id}/update', [ProductAdminController::class, 'update']);
 $router->post('/admin/products/{id}/delete', [ProductAdminController::class, 'delete']);
+
+$router->get('/admin/categories', [CategoryAdminController::class, 'index']);
+$router->post('/admin/categories/store', [CategoryAdminController::class, 'store']);
+$router->post('/admin/categories/{id}/update', [CategoryAdminController::class, 'update']);
+$router->post('/admin/categories/{id}/delete', [CategoryAdminController::class, 'delete']);
 
 $router->get('/admin/media', [MediaAdminController::class, 'index']);
 $router->post('/admin/media/upload', [MediaAdminController::class, 'upload']);

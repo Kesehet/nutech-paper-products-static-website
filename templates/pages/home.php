@@ -64,7 +64,11 @@ $hero = $page['sections']['home.hero']['content'] ?? [];
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             <?php foreach ($products as $product): ?>
             <article class="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                <div class="h-36 bg-slate-100"></div>
+                <?php if (!empty($product['featured_image_path'])): ?>
+                    <img src="<?= e(path_url((string) $product['featured_image_path'])) ?>" alt="<?= e((string) ($product['title'] ?? '')) ?>" class="h-36 w-full object-cover">
+                <?php else: ?>
+                    <div class="h-36 bg-slate-100"></div>
+                <?php endif; ?>
                 <div class="p-5">
                     <h3 class="text-base font-bold text-slate-900 mb-2"><?= e((string) ($product['title'] ?? '')) ?></h3>
                     <p class="text-sm text-slate-600 mb-4"><?= e((string) ($product['short_description'] ?? '')) ?></p>

@@ -60,6 +60,8 @@ final class ProductAdminController extends BaseAdminController
             ],
             'product' => $this->blankProduct(),
             'categories' => $this->categories(),
+            'mediaLibrary' => $this->mediaLibrary(),
+            'gallerySelections' => [],
             'formAction' => '/admin/products/store',
             'submitLabel' => 'Create Product',
         ]);
@@ -78,15 +80,22 @@ final class ProductAdminController extends BaseAdminController
 
         try {
             $pdo = Database::connection();
+            $pdo->beginTransaction();
             $stmt = $pdo->prepare(
                 'INSERT INTO products
-                    (category_id, title, slug, short_description, long_description, specifications_json, features_json, applications_json, sort_order, status, published_at, created_by, updated_by, created_at, updated_at)
+                    (category_id, title, slug, short_description, long_description, specifications_json, features_json, applications_json, featured_image_id, sort_order, status, published_at, created_by, updated_by, created_at, updated_at)
                  VALUES
-                    (:category_id, :title, :slug, :short_description, :long_description, :specifications_json, :features_json, :applications_json, :sort_order, :status, :published_at, :created_by, :updated_by, NOW(), NOW())'
+                    (:category_id, :title, :slug, :short_description, :long_description, :specifications_json, :features_json, :applications_json, :featured_image_id, :sort_order, :status, :published_at, :created_by, :updated_by, NOW(), NOW())'
             );
             $stmt->execute($payload);
+            $productId = (int) $pdo->lastInsertId();
+            $this->syncProductGallery($pdo, $productId, $request);
+            $pdo->commit();
             Session::flash('success', 'Product created successfully.');
         } catch (PDOException $exception) {
+            if (isset($pdo) && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             Session::flash('error', 'Unable to create product: ' . $exception->getMessage());
             Response::redirect('/admin/products/create');
         }
@@ -115,6 +124,8 @@ final class ProductAdminController extends BaseAdminController
             ],
             'product' => $product,
             'categories' => $this->categories(),
+            'mediaLibrary' => $this->mediaLibrary(),
+            'gallerySelections' => $this->gallerySelections($id),
             'formAction' => '/admin/products/' . $id . '/update',
             'submitLabel' => 'Update Product',
         ]);
@@ -146,6 +157,7 @@ final class ProductAdminController extends BaseAdminController
 
         try {
             $pdo = Database::connection();
+            $pdo->beginTransaction();
             $stmt = $pdo->prepare(
                 'UPDATE products
                  SET category_id = :category_id,
@@ -156,6 +168,7 @@ final class ProductAdminController extends BaseAdminController
                      specifications_json = :specifications_json,
                      features_json = :features_json,
                      applications_json = :applications_json,
+                     featured_image_id = :featured_image_id,
                      sort_order = :sort_order,
                      status = :status,
                      published_at = :published_at,
@@ -164,8 +177,13 @@ final class ProductAdminController extends BaseAdminController
                  WHERE id = :id'
             );
             $stmt->execute($payload);
+            $this->syncProductGallery($pdo, $id, $request);
+            $pdo->commit();
             Session::flash('success', 'Product updated successfully.');
         } catch (PDOException $exception) {
+            if (isset($pdo) && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             Session::flash('error', 'Unable to update product: ' . $exception->getMessage());
         }
 
@@ -227,6 +245,7 @@ final class ProductAdminController extends BaseAdminController
             'title' => '',
             'slug' => '',
             'category_id' => '',
+            'featured_image_id' => '',
             'short_description' => '',
             'long_description' => '',
             'specifications_json' => "{}",
@@ -247,6 +266,7 @@ final class ProductAdminController extends BaseAdminController
         $longDescription = trim((string) $request->input('long_description', ''));
         $sortOrder = (int) $request->input('sort_order', 0);
         $status = (string) $request->input('status', 'draft');
+        $featuredImageId = (int) $request->input('featured_image_id', 0);
 
         if ($title === '') {
             return [[], 'Product title is required.'];
@@ -277,12 +297,107 @@ final class ProductAdminController extends BaseAdminController
             'specifications_json' => $specifications,
             'features_json' => $features,
             'applications_json' => $applications,
+            'featured_image_id' => $featuredImageId > 0 ? $featuredImageId : null,
             'sort_order' => $sortOrder,
             'status' => $status,
             'published_at' => $publishedAt,
             'created_by' => $userId > 0 ? $userId : null,
             'updated_by' => $userId > 0 ? $userId : null,
         ], null];
+    }
+
+    private function mediaLibrary(): array
+    {
+        try {
+            $pdo = Database::connection();
+            $stmt = $pdo->query(
+                'SELECT id, original_name, storage_path, mime_type
+                 FROM media
+                 ORDER BY id DESC
+                 LIMIT 300'
+            );
+            return $stmt->fetchAll() ?: [];
+        } catch (PDOException) {
+            return [];
+        }
+    }
+
+    private function gallerySelections(int $productId): array
+    {
+        try {
+            $pdo = Database::connection();
+            $stmt = $pdo->prepare(
+                'SELECT media_id, alt_text, sort_order, is_primary
+                 FROM product_images
+                 WHERE product_id = :product_id
+                 ORDER BY sort_order ASC, id ASC'
+            );
+            $stmt->execute(['product_id' => $productId]);
+            $rows = $stmt->fetchAll() ?: [];
+
+            $map = [];
+            foreach ($rows as $row) {
+                $mediaId = (int) ($row['media_id'] ?? 0);
+                if ($mediaId <= 0) {
+                    continue;
+                }
+                $map[$mediaId] = [
+                    'alt_text' => (string) ($row['alt_text'] ?? ''),
+                    'sort_order' => (int) ($row['sort_order'] ?? 0),
+                    'is_primary' => (int) ($row['is_primary'] ?? 0) === 1,
+                ];
+            }
+            return $map;
+        } catch (PDOException) {
+            return [];
+        }
+    }
+
+    private function syncProductGallery(\PDO $pdo, int $productId, Request $request): void
+    {
+        $selectedRaw = $request->input('gallery_media_id', []);
+        $selectedIds = [];
+        if (is_array($selectedRaw)) {
+            foreach ($selectedRaw as $value) {
+                $id = (int) $value;
+                if ($id > 0) {
+                    $selectedIds[$id] = $id;
+                }
+            }
+        }
+        $selectedIds = array_values($selectedIds);
+
+        $altMap = $request->input('gallery_alt_text', []);
+        $sortMap = $request->input('gallery_sort_order', []);
+        $primaryMediaId = (int) $request->input('gallery_primary_media_id', 0);
+
+        $deleteStmt = $pdo->prepare('DELETE FROM product_images WHERE product_id = :product_id');
+        $deleteStmt->execute(['product_id' => $productId]);
+
+        if ($selectedIds === []) {
+            return;
+        }
+
+        $insertStmt = $pdo->prepare(
+            'INSERT INTO product_images
+                (product_id, media_id, alt_text, is_primary, sort_order, created_at)
+             VALUES
+                (:product_id, :media_id, :alt_text, :is_primary, :sort_order, NOW())'
+        );
+
+        foreach ($selectedIds as $index => $mediaId) {
+            $alt = is_array($altMap) ? trim((string) ($altMap[(string) $mediaId] ?? $altMap[$mediaId] ?? '')) : '';
+            $sort = is_array($sortMap) ? (int) ($sortMap[(string) $mediaId] ?? $sortMap[$mediaId] ?? ($index + 1)) : ($index + 1);
+            $isPrimary = $primaryMediaId > 0 && $primaryMediaId === $mediaId ? 1 : 0;
+
+            $insertStmt->execute([
+                'product_id' => $productId,
+                'media_id' => $mediaId,
+                'alt_text' => $alt,
+                'is_primary' => $isPrimary,
+                'sort_order' => $sort,
+            ]);
+        }
     }
 
     private function normalizeJsonString(string $value): string

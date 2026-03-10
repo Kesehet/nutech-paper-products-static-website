@@ -22,7 +22,11 @@ $hero = $page['sections']['catalog.hero']['content'] ?? [];
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($products as $product): ?>
             <article class="rounded-xl border border-slate-200 bg-white overflow-hidden">
-                <div class="h-44 bg-slate-100"></div>
+                <?php if (!empty($product['featured_image_path'])): ?>
+                    <img src="<?= e(path_url((string) $product['featured_image_path'])) ?>" alt="<?= e((string) ($product['title'] ?? '')) ?>" class="h-44 w-full object-cover">
+                <?php else: ?>
+                    <div class="h-44 bg-slate-100"></div>
+                <?php endif; ?>
                 <div class="p-6">
                     <p class="text-xs uppercase tracking-wider text-primary font-bold mb-2"><?= e((string) ($product['category_name'] ?? 'Product')) ?></p>
                     <h3 class="text-xl font-bold text-slate-900 mb-2"><?= e((string) ($product['title'] ?? '')) ?></h3>
