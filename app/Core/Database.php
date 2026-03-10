@@ -17,7 +17,7 @@ final class Database
             return self::$pdo;
         }
 
-        $driver = (string) env('DB_CONNECTION', 'mysql');
+        $driver = self::normalizeDriver((string) env('DB_CONNECTION', 'mysql'));
         $host = (string) env('DB_HOST', '127.0.0.1');
         $port = (string) env('DB_PORT', '3306');
         $database = (string) env('DB_DATABASE', '');
@@ -46,7 +46,7 @@ final class Database
             return self::$serverPdo;
         }
 
-        $driver = (string) env('DB_CONNECTION', 'mysql');
+        $driver = self::normalizeDriver((string) env('DB_CONNECTION', 'mysql'));
         $host = (string) env('DB_HOST', '127.0.0.1');
         $port = (string) env('DB_PORT', '3306');
         $charset = (string) env('DB_CHARSET', 'utf8mb4');
@@ -75,5 +75,15 @@ final class Database
         }
 
         return sprintf('%s:host=%s;port=%s;charset=%s', $driver, $host, $port, $charset);
+    }
+
+    public static function normalizeDriver(string $driver): string
+    {
+        $normalized = strtolower(trim($driver));
+        if ($normalized === 'mariadb') {
+            // PDO uses the mysql driver for both MySQL and MariaDB.
+            return 'mysql';
+        }
+        return $normalized === '' ? 'mysql' : $normalized;
     }
 }

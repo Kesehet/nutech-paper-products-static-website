@@ -21,7 +21,8 @@ final class AutoSync
             return;
         }
 
-        if ((string) env('DB_CONNECTION', 'mysql') !== 'mysql') {
+        $driver = Database::normalizeDriver((string) env('DB_CONNECTION', 'mysql'));
+        if ($driver !== 'mysql') {
             return;
         }
 
@@ -145,4 +146,3 @@ final class AutoSync
         @file_put_contents($logDir . '/auto_sync.log', $line, FILE_APPEND);
     }
 }
-
