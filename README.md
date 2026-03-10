@@ -13,6 +13,7 @@ CMS-driven PHP website + admin panel for Hostinger-compatible Apache/PHP hosting
   - Admin login/dashboard/module scaffolds
   - DB schema + seed SQL
   - `.env`-based configuration
+  - bootstrap auto-sync (schema/seed) for first-time install
 
 ## Tech Stack
 - PHP 8+
@@ -43,6 +44,13 @@ CMS-driven PHP website + admin panel for Hostinger-compatible Apache/PHP hosting
 6. Serve project via Apache root:
    - Root strategy is supported using project-level `.htaccess`.
    - If document root can be changed, point it to `public/`.
+
+### Optional Auto-Sync (Enabled by Default)
+- On app boot, if `AUTO_SYNC_ON_BOOT=true`, the app checks DB state.
+- If `users` table is missing or has zero rows, it automatically runs:
+  - `database/schema.sql`
+  - `database/seeders/seed.sql`
+- Auto-sync writes failures to `storage/logs/auto_sync.log`.
 
 ## Routes
 - Public:
@@ -80,4 +88,3 @@ Change this immediately in production.
 3. Finish script injection controls and sanitization policies.
 4. Add activity logging across write operations.
 5. Add stronger validation, pagination, and filtering in admin tables.
-
