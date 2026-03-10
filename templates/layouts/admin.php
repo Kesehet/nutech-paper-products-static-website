@@ -22,8 +22,10 @@ $meta = $meta ?? [];
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/products')) ?>">Products</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/media')) ?>">Media</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/seo')) ?>">SEO</a>
+            <?php if (($authUser['role'] ?? '') === 'admin'): ?>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/settings')) ?>">Settings</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/users')) ?>">Users</a>
+            <?php endif; ?>
         </nav>
     </aside>
     <div class="flex-1 min-w-0">
@@ -38,6 +40,16 @@ $meta = $meta ?? [];
             </div>
         </header>
         <div class="p-4 md:p-8">
+            <?php if (!empty($flashSuccess)): ?>
+                <div class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                    <?= e((string) $flashSuccess) ?>
+                </div>
+            <?php endif; ?>
+            <?php if (!empty($flashError)): ?>
+                <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    <?= e((string) $flashError) ?>
+                </div>
+            <?php endif; ?>
             <?= $content ?>
         </div>
     </div>

@@ -11,6 +11,11 @@ $backgroundLight = (string) ($theme['background_light_color'] ?? '#F8FAFC');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php if (!empty($headStartScripts) && is_array($headStartScripts)): ?>
+        <?php foreach ($headStartScripts as $script): ?>
+            <?= (string) ($script['script_content'] ?? '') ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
     <title><?= e((string) ($meta['title'] ?? $siteTitle)) ?></title>
     <meta name="description" content="<?= e((string) ($meta['description'] ?? '')) ?>">
     <?php if (!empty($meta['keywords'])): ?>
@@ -24,6 +29,9 @@ $backgroundLight = (string) ($theme['background_light_color'] ?? '#F8FAFC');
     <meta property="og:description" content="<?= e((string) ($meta['og_description'] ?? ($meta['description'] ?? ''))) ?>">
     <?php if (!empty($meta['og_image'])): ?>
     <meta property="og:image" content="<?= e((string) $meta['og_image']) ?>">
+    <?php endif; ?>
+    <?php if (!empty($meta['schema_json'])): ?>
+    <script type="application/ld+json"><?= (string) $meta['schema_json'] ?></script>
     <?php endif; ?>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script>
@@ -48,10 +56,9 @@ $backgroundLight = (string) ($theme['background_light_color'] ?? '#F8FAFC');
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= asset('assets/css/site.css') ?>">
-    <?php if (!empty($headScripts) && is_array($headScripts)): ?>
-        <?php foreach ($headScripts as $script): ?>
+    <?php if (!empty($headEndScripts) && is_array($headEndScripts)): ?>
+        <?php foreach ($headEndScripts as $script): ?>
             <?= (string) ($script['script_content'] ?? '') ?>
         <?php endforeach; ?>
     <?php endif; ?>
 </head>
-

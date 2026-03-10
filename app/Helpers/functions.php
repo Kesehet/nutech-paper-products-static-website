@@ -72,3 +72,13 @@ if (!function_exists('path_url')) {
         return ($basePath === '' ? '' : $basePath) . ($normalized === '//' ? '/' : $normalized);
     }
 }
+
+if (!function_exists('slugify')) {
+    function slugify(string $value): string
+    {
+        $value = strtolower(trim($value));
+        $value = preg_replace('/[^a-z0-9]+/i', '-', $value) ?? '';
+        $value = trim($value, '-');
+        return $value === '' ? 'item' : $value;
+    }
+}

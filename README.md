@@ -50,6 +50,8 @@ CMS-driven PHP website + admin panel for Hostinger-compatible Apache/PHP hosting
 - If `users` table is missing or has zero rows, it automatically runs:
   - `database/schema.sql`
   - `database/seeders/seed.sql`
+- `AUTO_SYNC_CREATE_DATABASE` defaults to `false` (recommended for shared hosting).
+  - Set it `true` only when DB user has create-database permission.
 - Auto-sync writes failures to `storage/logs/auto_sync.log`.
 
 ## Routes

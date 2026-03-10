@@ -43,21 +43,31 @@ final class AutoSync
 
     private static function ensureDatabaseExists(): void
     {
+        if (!config_bool('AUTO_SYNC_CREATE_DATABASE', false)) {
+            return;
+        }
+
         $database = (string) env('DB_DATABASE', '');
         if ($database === '') {
             throw new \RuntimeException('DB_DATABASE is empty.');
         }
 
-        $serverPdo = Database::serverConnection();
-        $quotedDb = str_replace('`', '``', $database);
-        $charset = (string) env('DB_CHARSET', 'utf8mb4');
+        try {
+            $serverPdo = Database::serverConnection();
+            $quotedDb = str_replace('`', '``', $database);
+            $charset = (string) env('DB_CHARSET', 'utf8mb4');
 
-        $serverPdo->exec(sprintf(
-            'CREATE DATABASE IF NOT EXISTS `%s` CHARACTER SET %s COLLATE %s_unicode_ci',
-            $quotedDb,
-            $charset,
-            $charset
-        ));
+            $serverPdo->exec(sprintf(
+                'CREATE DATABASE IF NOT EXISTS `%s` CHARACTER SET %s COLLATE %s_unicode_ci',
+                $quotedDb,
+                $charset,
+                $charset
+            ));
+        } catch (Throwable $exception) {
+            // Shared hosting users commonly lack CREATE DATABASE grants.
+            // Continue with regular connection; DB may already exist.
+            self::log('AutoSync ensureDatabaseExists skipped: ' . $exception->getMessage());
+        }
     }
 
     private static function shouldSync(PDO $pdo): bool

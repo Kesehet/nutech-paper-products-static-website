@@ -5,8 +5,11 @@ declare(strict_types=1);
     <div class="w-full max-w-md bg-white border border-slate-200 rounded-2xl shadow-sm p-8">
         <h1 class="text-2xl font-black text-dark-navy mb-2">Admin Login</h1>
         <p class="text-sm text-slate-600 mb-6">Sign in to manage website content and products.</p>
-        <?php if (!empty($error)): ?>
-            <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"><?= e((string) $error) ?></div>
+        <?php if (!empty($flashSuccess)): ?>
+            <div class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"><?= e((string) $flashSuccess) ?></div>
+        <?php endif; ?>
+        <?php if (!empty($flashError)): ?>
+            <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"><?= e((string) $flashError) ?></div>
         <?php endif; ?>
         <form action="<?= e(path_url('/admin/login')) ?>" method="post" class="space-y-4">
             <input type="hidden" name="_csrf" value="<?= e((string) $csrfToken) ?>">

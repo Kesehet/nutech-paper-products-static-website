@@ -8,9 +8,8 @@ use App\Core\Csrf;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
-use App\Core\View;
 
-final class AuthController
+final class AuthController extends BaseAdminController
 {
     public function showLogin(Request $request): void
     {
@@ -18,15 +17,12 @@ final class AuthController
             Response::redirect('/admin/dashboard');
         }
 
-        View::render('admin/auth/login', [
+        $this->render('admin/auth/login', $request, [
             'meta' => [
                 'title' => 'Admin Login | Nutech Paper Products',
                 'description' => 'CMS Admin Login',
             ],
-            'csrfToken' => Csrf::token(),
-            'error' => Session::pullFlash('error'),
-            'currentPath' => $request->path(),
-        ], 'layouts/admin');
+        ]);
     }
 
     public function login(Request $request): void
@@ -63,4 +59,3 @@ final class AuthController
         Response::redirect('/admin/login');
     }
 }
-

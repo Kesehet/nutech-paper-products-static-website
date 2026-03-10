@@ -199,10 +199,10 @@ final class PageController
             'primaryNav' => $this->navigationService->getMenu('primary'),
             'footerNav' => $this->navigationService->getMenu('footer'),
             'currentPath' => $currentPath,
-            'headScripts' => $this->scriptService->getByLocation('head_end'),
+            'headStartScripts' => $this->scriptService->getByLocation('head_start'),
+            'headEndScripts' => $this->scriptService->getByLocation('head_end'),
             'footerScripts' => $this->scriptService->getByLocation('body_end'),
             'csrfToken' => Csrf::token(),
         ]), 'layouts/public', $status);
     }
 }
-
