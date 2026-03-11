@@ -92,19 +92,57 @@ $heroImageUrl = preg_match('#^(https?:)?//#i', $heroImagePath) === 1
 </section>
 
 <section class="py-20 bg-slate-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 rounded-2xl overflow-hidden border border-slate-200">
-        <div class="p-10 lg:p-14 bg-dark-navy text-white">
-            <h2 class="text-4xl font-bold mb-6">Send an Enquiry</h2>
-            <p class="text-slate-300">Share your requirement and our team will provide a suitable product recommendation quickly.</p>
-        </div>
-        <div class="p-10 bg-white">
-            <form action="<?= e(path_url('/contact-us')) ?>" method="post" class="space-y-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row border border-slate-100">
+            <div class="lg:w-1/2 p-8 lg:p-16 bg-dark-navy text-white flex flex-col justify-center">
+                <h2 class="text-4xl font-bold mb-6">Send an Enquiry</h2>
+                <p class="text-slate-300 text-lg mb-8">Have a specific requirement or looking for a bulk quote? Our experts are ready to assist you with the right paper solutions.</p>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4">
+                        <span class="material-symbols-outlined">phone_in_talk</span>
+                        <span class="font-medium"><?= e((string) ($site['contact_phone'] ?? '+91-11-XXXX-XXXX')) ?></span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="material-symbols-outlined">mail</span>
+                        <span class="font-medium"><?= e((string) ($site['contact_email'] ?? 'sales@nutechpaper.com')) ?></span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <span class="font-medium"><?= e((string) ($site['address'] ?? 'New Delhi Industrial Area, India')) ?></span>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:w-1/2 p-8 lg:p-16">
+            <form action="<?= e(path_url('/contact-us')) ?>" method="post" class="space-y-6">
                 <input type="hidden" name="_csrf" value="<?= e((string) $csrfToken) ?>">
-                <input class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-primary focus:border-primary transition-all" type="text" name="full_name" placeholder="Full Name" required>
-                <input class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-primary focus:border-primary transition-all" type="email" name="email" placeholder="email@example.com" required>
-                <textarea class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-primary focus:border-primary transition-all" name="message" rows="4" placeholder="Your requirement..." required></textarea>
-                <button class="w-full py-4 bg-primary hover:bg-primary-hover text-dark-navy font-bold rounded-xl transition-all" type="submit">Submit Enquiry</button>
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Name</label>
+                        <input class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-primary focus:border-primary transition-all" type="text" name="full_name" placeholder="Full Name" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+                        <input class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-primary focus:border-primary transition-all" type="email" name="email" placeholder="email@example.com" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Product Interest</label>
+                    <select class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-primary focus:border-primary transition-all" name="inquiry_type">
+                        <option value="General Inquiry">Select a product</option>
+                        <?php foreach ($products as $product): ?>
+                            <?php $productTitle = trim((string) ($product['title'] ?? '')); ?>
+                            <?php if ($productTitle === ''): continue; endif; ?>
+                            <option value="<?= e($productTitle) ?>"><?= e($productTitle) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Message</label>
+                    <textarea class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-primary focus:border-primary transition-all" name="message" rows="4" placeholder="Your requirements..." required></textarea>
+                </div>
+                <button class="w-full py-4 bg-primary hover:bg-primary-hover text-dark-navy font-bold rounded-xl transition-all shadow-lg shadow-primary/20" type="submit">Send Enquiry</button>
             </form>
+            </div>
         </div>
     </div>
 </section>
