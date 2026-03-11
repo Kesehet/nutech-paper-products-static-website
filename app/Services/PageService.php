@@ -157,8 +157,13 @@ final class PageService
                     'contact.form' => [
                         'content' => [
                             'heading' => 'Get in Touch',
+                            'full_name_label' => 'Full Name *',
+                            'email_label' => 'Email *',
+                            'phone_label' => 'Phone',
+                            'company_label' => 'Company',
                             'submit_label' => 'Submit Inquiry',
                             'inquiry_label' => 'Inquiry Type',
+                            'message_label' => 'Message *',
                             'option_1' => 'Product Inquiry',
                             'option_2' => 'Bulk Order',
                             'option_3' => 'Technical Support',
@@ -198,6 +203,12 @@ final class PageService
                             'all_label' => 'All Products',
                             'search_placeholder' => 'Search catalog...',
                             'stock_label' => 'In Stock',
+                            'quote_button_label' => 'Get Best Price',
+                            'details_link_label' => 'View Details',
+                            'no_results_heading' => 'No products found',
+                            'no_results_description' => 'Try another category or search term.',
+                            'default_image_path' => 'https://images.unsplash.com/photo-1581091215367-59ab6dcef782?auto=format&fit=crop&w=1200&q=80',
+                            'default_image_alt' => 'Industrial paper product image',
                         ],
                     ],
                     'catalog.custom_cta' => [

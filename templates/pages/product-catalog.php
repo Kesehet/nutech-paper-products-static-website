@@ -59,6 +59,12 @@ $listing = $getSectionContent('catalog.listing', [
     'all_label' => 'All Products',
     'search_placeholder' => 'Search catalog...',
     'stock_label' => 'In Stock',
+    'quote_button_label' => 'Get Best Price',
+    'details_link_label' => 'View Details',
+    'no_results_heading' => 'No products found',
+    'no_results_description' => 'Try another category or search term.',
+    'default_image_path' => 'https://images.unsplash.com/photo-1581091215367-59ab6dcef782?auto=format&fit=crop&w=1200&q=80',
+    'default_image_alt' => 'Industrial paper product image',
 ]);
 
 $customCta = $getSectionContent('catalog.custom_cta', [
@@ -69,6 +75,7 @@ $customCta = $getSectionContent('catalog.custom_cta', [
 ]);
 
 $heroImage = $resolveAssetUrl((string) ($hero['image_path'] ?? ''));
+$defaultProductImage = $resolveAssetUrl((string) ($listing['default_image_path'] ?? ''));
 ?>
 <?php if ($isSectionVisible('catalog.hero')): ?>
 <section class="relative overflow-hidden rounded-xl mb-12 bg-slate-900 aspect-[21/9] flex items-center">
@@ -129,10 +136,24 @@ $heroImage = $resolveAssetUrl((string) ($hero['image_path'] ?? ''));
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <?php foreach ($products as $product): ?>
+            <?php
+            $productImagePath = trim((string) ($product['featured_image_path'] ?? ''));
+            if ($productImagePath !== '') {
+                $productImage = preg_match('#^(https?:)?//#i', $productImagePath) === 1
+                    ? $productImagePath
+                    : path_url($productImagePath);
+            } else {
+                $productImage = $defaultProductImage;
+            }
+            $productImageAlt = trim((string) ($product['title'] ?? ''));
+            if ($productImageAlt === '') {
+                $productImageAlt = (string) ($listing['default_image_alt'] ?? 'Product');
+            }
+            ?>
         <article class="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
             <div class="aspect-video relative overflow-hidden">
-                <?php if (!empty($product['featured_image_path'])): ?>
-                    <img src="<?= e(path_url((string) $product['featured_image_path'])) ?>" alt="<?= e((string) ($product['title'] ?? 'Product')) ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                <?php if ($productImage !== ''): ?>
+                    <img src="<?= e($productImage) ?>" alt="<?= e($productImageAlt) ?>" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                 <?php else: ?>
                     <div class="w-full h-full bg-slate-100"></div>
                 <?php endif; ?>
@@ -146,13 +167,20 @@ $heroImage = $resolveAssetUrl((string) ($hero['image_path'] ?? ''));
                 <div class="space-y-3">
                     <a class="w-full bg-primary hover:bg-primary-hover text-slate-900 font-bold py-2.5 rounded-lg text-sm transition-colors flex items-center justify-center gap-2" href="<?= e(query_url('/contact-us', ['product' => (string) ($product['slug'] ?? '')])) ?>">
                         <span class="material-symbols-outlined text-lg">request_quote</span>
-                        Get Best Price
+                        <?= e((string) ($listing['quote_button_label'] ?? 'Get Best Price')) ?>
                     </a>
-                    <a class="block text-center text-sm font-semibold text-primary hover:underline" href="<?= e(path_url('/product/' . (string) ($product['slug'] ?? ''))) ?>">View Details</a>
+                    <a class="block text-center text-sm font-semibold text-primary hover:underline" href="<?= e(path_url('/product/' . (string) ($product['slug'] ?? ''))) ?>"><?= e((string) ($listing['details_link_label'] ?? 'View Details')) ?></a>
                 </div>
             </div>
         </article>
         <?php endforeach; ?>
+
+        <?php if ($products === []): ?>
+        <article class="sm:col-span-2 lg:col-span-3 xl:col-span-4 bg-white rounded-xl border border-slate-200 p-8 text-center">
+            <h3 class="text-xl font-bold text-slate-900 mb-2"><?= e((string) ($listing['no_results_heading'] ?? 'No products found')) ?></h3>
+            <p class="text-slate-500"><?= e((string) ($listing['no_results_description'] ?? 'Try another category or search term.')) ?></p>
+        </article>
+        <?php endif; ?>
 
         <?php if ($isSectionVisible('catalog.custom_cta')): ?>
         <article class="bg-primary/10 border-2 border-dashed border-primary/30 rounded-xl flex flex-col items-center justify-center p-8 text-center">
