@@ -8,9 +8,14 @@ use PDOException;
 
 final class SettingService
 {
+    public function getDefaults(): array
+    {
+        return $this->defaults();
+    }
+
     public function getGrouped(): array
     {
-        $defaults = $this->defaults();
+        $defaults = $this->getDefaults();
 
         try {
             $pdo = Database::connection();
