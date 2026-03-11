@@ -77,20 +77,21 @@ $customCta = $getSectionContent('catalog.custom_cta', [
 $heroImage = $resolveAssetUrl((string) ($hero['image_path'] ?? ''));
 $defaultProductImage = $resolveAssetUrl((string) ($listing['default_image_path'] ?? ''));
 ?>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
 <?php if ($isSectionVisible('catalog.hero')): ?>
-<section class="relative overflow-hidden rounded-xl mb-12 bg-slate-900 aspect-[21/9] flex items-center">
+<section class="relative overflow-hidden rounded-xl mb-10 sm:mb-12 bg-slate-900 aspect-[5/4] sm:aspect-[21/9] flex items-center">
     <div class="absolute inset-0 opacity-40 bg-cover bg-center" style="background-image: url('<?= e($heroImage) ?>')" aria-hidden="true"></div>
     <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/60 to-transparent"></div>
-    <div class="relative z-10 px-8 lg:px-16 max-w-2xl">
+    <div class="relative z-10 px-5 py-6 sm:px-8 lg:px-16 max-w-2xl">
         <span class="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-4"><?= e((string) ($hero['badge'] ?? '')) ?></span>
-        <h1 class="text-4xl lg:text-6xl font-black text-white leading-tight mb-4"><?= e((string) ($hero['heading'] ?? '')) ?></h1>
-        <p class="text-slate-300 text-lg mb-8"><?= e((string) ($hero['description'] ?? '')) ?></p>
-        <div class="flex flex-wrap gap-4">
+        <h1 class="text-3xl sm:text-4xl lg:text-6xl font-black text-white leading-tight mb-4"><?= e((string) ($hero['heading'] ?? '')) ?></h1>
+        <p class="text-slate-300 text-base sm:text-lg mb-6 sm:mb-8"><?= e((string) ($hero['description'] ?? '')) ?></p>
+        <div class="flex flex-wrap gap-3 sm:gap-4">
             <?php if (trim((string) ($hero['primary_cta_label'] ?? '')) !== ''): ?>
-            <a class="bg-primary hover:bg-primary-hover text-slate-900 font-bold px-6 py-3 rounded-lg transition-all" href="<?= e($resolveLink((string) ($hero['primary_cta_link'] ?? '#'))) ?>"><?= e((string) ($hero['primary_cta_label'] ?? '')) ?></a>
+            <a class="bg-primary hover:bg-primary-hover text-slate-900 font-bold px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg transition-all" href="<?= e($resolveLink((string) ($hero['primary_cta_link'] ?? '#'))) ?>"><?= e((string) ($hero['primary_cta_label'] ?? '')) ?></a>
             <?php endif; ?>
             <?php if (trim((string) ($hero['secondary_cta_label'] ?? '')) !== ''): ?>
-            <a class="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-bold px-6 py-3 rounded-lg border border-white/20 transition-all" href="<?= e($resolveLink((string) ($hero['secondary_cta_link'] ?? '#'))) ?>"><?= e((string) ($hero['secondary_cta_label'] ?? '')) ?></a>
+            <a class="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-bold px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg border border-white/20 transition-all" href="<?= e($resolveLink((string) ($hero['secondary_cta_link'] ?? '#'))) ?>"><?= e((string) ($hero['secondary_cta_label'] ?? '')) ?></a>
             <?php endif; ?>
         </div>
     </div>
@@ -195,3 +196,4 @@ $defaultProductImage = $resolveAssetUrl((string) ($listing['default_image_path']
     </div>
 </section>
 <?php endif; ?>
+</div>
