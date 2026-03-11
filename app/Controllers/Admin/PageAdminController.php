@@ -25,8 +25,11 @@ final class PageAdminController extends BaseAdminController
             $params = [];
             $where = '';
             if ($search !== '') {
-                $where = ' WHERE p.title LIKE :search OR p.slug LIKE :search OR p.template_key LIKE :search';
-                $params['search'] = '%' . $search . '%';
+                $where = ' WHERE p.title LIKE :search_title OR p.slug LIKE :search_slug OR p.template_key LIKE :search_template';
+                $term = '%' . $search . '%';
+                $params['search_title'] = $term;
+                $params['search_slug'] = $term;
+                $params['search_template'] = $term;
             }
 
             $countStmt = $pdo->prepare('SELECT COUNT(*) FROM pages p' . $where);

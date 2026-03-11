@@ -25,8 +25,11 @@ final class CategoryAdminController extends BaseAdminController
             $params = [];
             $where = '';
             if ($search !== '') {
-                $where = ' WHERE c.name LIKE :search OR c.slug LIKE :search OR c.description LIKE :search';
-                $params['search'] = '%' . $search . '%';
+                $where = ' WHERE c.name LIKE :search_name OR c.slug LIKE :search_slug OR c.description LIKE :search_description';
+                $term = '%' . $search . '%';
+                $params['search_name'] = $term;
+                $params['search_slug'] = $term;
+                $params['search_description'] = $term;
             }
 
             $countStmt = $pdo->prepare('SELECT COUNT(*) FROM product_categories c' . $where);

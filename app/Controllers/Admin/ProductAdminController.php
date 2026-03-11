@@ -35,10 +35,12 @@ final class ProductAdminController extends BaseAdminController
 
             $params = [];
             if ($search !== '') {
-                $where = ' WHERE p.title LIKE :search OR p.slug LIKE :search';
+                $where = ' WHERE p.title LIKE :search_title OR p.slug LIKE :search_slug';
                 $countSql .= $where;
                 $sql .= $where;
-                $params['search'] = '%' . $search . '%';
+                $term = '%' . $search . '%';
+                $params['search_title'] = $term;
+                $params['search_slug'] = $term;
             }
 
             $countStmt = $pdo->prepare($countSql);

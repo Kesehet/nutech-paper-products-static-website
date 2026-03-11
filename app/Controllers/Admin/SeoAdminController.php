@@ -42,8 +42,10 @@ final class SeoAdminController extends BaseAdminController
             $pageParams = [];
             $pageWhere = '';
             if ($pageSearch !== '') {
-                $pageWhere = ' WHERE p.title LIKE :page_search OR p.slug LIKE :page_search';
-                $pageParams['page_search'] = '%' . $pageSearch . '%';
+                $pageWhere = ' WHERE p.title LIKE :page_title_search OR p.slug LIKE :page_slug_search';
+                $pageTerm = '%' . $pageSearch . '%';
+                $pageParams['page_title_search'] = $pageTerm;
+                $pageParams['page_slug_search'] = $pageTerm;
             }
             $pageCountStmt = $pdo->prepare('SELECT COUNT(*) FROM pages p' . $pageWhere);
             $pageCountStmt->execute($pageParams);
@@ -70,8 +72,10 @@ final class SeoAdminController extends BaseAdminController
             $productParams = [];
             $productWhere = '';
             if ($productSearch !== '') {
-                $productWhere = ' WHERE p.title LIKE :product_search OR p.slug LIKE :product_search';
-                $productParams['product_search'] = '%' . $productSearch . '%';
+                $productWhere = ' WHERE p.title LIKE :product_title_search OR p.slug LIKE :product_slug_search';
+                $productTerm = '%' . $productSearch . '%';
+                $productParams['product_title_search'] = $productTerm;
+                $productParams['product_slug_search'] = $productTerm;
             }
             $productCountStmt = $pdo->prepare('SELECT COUNT(*) FROM products p' . $productWhere);
             $productCountStmt->execute($productParams);

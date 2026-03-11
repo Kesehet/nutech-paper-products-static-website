@@ -108,7 +108,7 @@ AND NOT EXISTS (SELECT 1 FROM products WHERE slug = 'pre-gummed-paper');
 INSERT INTO settings (setting_group, setting_key, setting_value, value_type, is_public) VALUES
 ('site', 'title', 'Nutech Paper Products', 'string', 1),
 ('site', 'logo_path', '/assets/img/nutech_square_logo.png', 'string', 1),
-('site', 'home_hero_image', 'https://images.unsplash.com/photo-1581092787765-e3feb951d987?auto=format&fit=crop&w=1200&q=80', 'string', 1),
+('site', 'home_hero_image', 'https://images.unsplash.com/photo-1603484477859-abe6a73f9366?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'string', 1),
 ('site', 'home_hero_image_alt', 'Nutech manufacturing', 'string', 1),
 ('site', 'contact_email', 'info@nutechpaper.com', 'string', 1),
 ('site', 'contact_phone', '+91 11 5555 4444', 'string', 1),

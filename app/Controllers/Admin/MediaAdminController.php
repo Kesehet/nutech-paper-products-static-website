@@ -26,8 +26,11 @@ final class MediaAdminController extends BaseAdminController
             $params = [];
             $where = '';
             if ($search !== '') {
-                $where = ' WHERE m.original_name LIKE :search OR m.mime_type LIKE :search OR m.storage_path LIKE :search';
-                $params['search'] = '%' . $search . '%';
+                $where = ' WHERE m.original_name LIKE :search_name OR m.mime_type LIKE :search_mime OR m.storage_path LIKE :search_path';
+                $term = '%' . $search . '%';
+                $params['search_name'] = $term;
+                $params['search_mime'] = $term;
+                $params['search_path'] = $term;
             }
 
             $countStmt = $pdo->prepare('SELECT COUNT(*) FROM media m' . $where);
@@ -177,12 +180,17 @@ final class MediaAdminController extends BaseAdminController
 
             $usageStmt = $pdo->prepare(
                 'SELECT
-                    (SELECT COUNT(*) FROM product_images WHERE media_id = :media_id) +
-                    (SELECT COUNT(*) FROM products WHERE featured_image_id = :media_id) +
-                    (SELECT COUNT(*) FROM page_sections WHERE featured_media_id = :media_id) +
-                    (SELECT COUNT(*) FROM seo_meta WHERE og_image_id = :media_id) AS usage_count'
+                    (SELECT COUNT(*) FROM product_images WHERE media_id = :product_images_media_id) +
+                    (SELECT COUNT(*) FROM products WHERE featured_image_id = :products_media_id) +
+                    (SELECT COUNT(*) FROM page_sections WHERE featured_media_id = :page_sections_media_id) +
+                    (SELECT COUNT(*) FROM seo_meta WHERE og_image_id = :seo_meta_media_id) AS usage_count'
             );
-            $usageStmt->execute(['media_id' => $id]);
+            $usageStmt->execute([
+                'product_images_media_id' => $id,
+                'products_media_id' => $id,
+                'page_sections_media_id' => $id,
+                'seo_meta_media_id' => $id,
+            ]);
             $usageCount = (int) $usageStmt->fetchColumn();
             if ($usageCount > 0) {
                 Session::flash('error', 'Media is currently in use and cannot be deleted.');

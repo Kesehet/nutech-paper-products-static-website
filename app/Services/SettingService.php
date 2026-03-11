@@ -48,7 +48,7 @@ final class SettingService
                 'contact_phone' => '+91 11 5555 4444',
                 'address' => 'Plot No. 45, Okhla Industrial Estate, Phase III, New Delhi - 110020, India',
                 'logo_path' => '/assets/img/nutech_square_logo.png',
-                'home_hero_image' => 'https://images.unsplash.com/photo-1581092787765-e3feb951d987?auto=format&fit=crop&w=1200&q=80',
+                'home_hero_image' => 'https://images.unsplash.com/photo-1603484477859-abe6a73f9366?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                 'home_hero_image_alt' => 'Nutech manufacturing',
             ],
             'theme' => [

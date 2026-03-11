@@ -32,8 +32,11 @@ final class UserAdminController extends BaseAdminController
             $params = [];
             $where = '';
             if ($search !== '') {
-                $where = ' WHERE u.full_name LIKE :search OR u.email LIKE :search OR r.name LIKE :search';
-                $params['search'] = '%' . $search . '%';
+                $where = ' WHERE u.full_name LIKE :search_full_name OR u.email LIKE :search_email OR r.name LIKE :search_role';
+                $term = '%' . $search . '%';
+                $params['search_full_name'] = $term;
+                $params['search_email'] = $term;
+                $params['search_role'] = $term;
             }
 
             $countStmt = $pdo->prepare(
