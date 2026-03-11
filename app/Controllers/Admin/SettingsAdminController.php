@@ -8,6 +8,7 @@ use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
+use App\Services\SettingService;
 use PDOException;
 
 final class SettingsAdminController extends BaseAdminController
@@ -15,6 +16,8 @@ final class SettingsAdminController extends BaseAdminController
     private const FIELDS = [
         'site.title' => 'string',
         'site.logo_path' => 'string',
+        'site.home_hero_image' => 'string',
+        'site.home_hero_image_alt' => 'string',
         'site.contact_email' => 'string',
         'site.contact_phone' => 'string',
         'site.address' => 'string',
@@ -32,15 +35,10 @@ final class SettingsAdminController extends BaseAdminController
         $this->requireAdmin();
 
         $values = [];
-        try {
-            $pdo = Database::connection();
-            $stmt = $pdo->query('SELECT setting_group, setting_key, setting_value FROM settings');
-            foreach (($stmt->fetchAll() ?: []) as $row) {
-                $flatKey = (string) $row['setting_group'] . '.' . (string) $row['setting_key'];
-                $values[$flatKey] = (string) ($row['setting_value'] ?? '');
-            }
-        } catch (PDOException $exception) {
-            Session::flash('error', 'Unable to load settings: ' . $exception->getMessage());
+        $grouped = (new SettingService())->getGrouped();
+        foreach (array_keys(self::FIELDS) as $flatKey) {
+            [$group, $key] = explode('.', $flatKey, 2);
+            $values[$flatKey] = (string) ($grouped[$group][$key] ?? '');
         }
 
         $this->render('admin/settings/index', $request, [

@@ -2,6 +2,17 @@
 declare(strict_types=1);
 
 $hero = $page['sections']['home.hero']['content'] ?? [];
+$heroImagePath = trim((string) ($site['home_hero_image'] ?? ''));
+if ($heroImagePath === '') {
+    $heroImagePath = 'https://images.unsplash.com/photo-1581092787765-e3feb951d987?auto=format&fit=crop&w=1200&q=80';
+}
+$heroImageAlt = trim((string) ($site['home_hero_image_alt'] ?? ''));
+if ($heroImageAlt === '') {
+    $heroImageAlt = 'Nutech manufacturing';
+}
+$heroImageUrl = preg_match('#^(https?:)?//#i', $heroImagePath) === 1
+    ? $heroImagePath
+    : ($heroImagePath[0] === '/' ? path_url($heroImagePath) : asset($heroImagePath));
 ?>
 <section class="relative overflow-hidden pt-16 pb-20 lg:pt-24 lg:pb-32">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
@@ -18,7 +29,7 @@ $hero = $page['sections']['home.hero']['content'] ?? [];
             </a>
         </div>
         <div class="relative">
-            <img alt="Nutech manufacturing" class="rounded-2xl shadow-2xl w-full h-[420px] object-cover" src="https://images.unsplash.com/photo-1581092787765-e3feb951d987?auto=format&fit=crop&w=1200&q=80">
+            <img alt="<?= e($heroImageAlt) ?>" class="rounded-2xl shadow-2xl w-full h-[420px] object-cover" src="<?= e($heroImageUrl) ?>">
             <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-lg p-4 border border-slate-200">
                 <p class="text-xs uppercase text-slate-500 tracking-wider">Production Capacity</p>
                 <p class="text-2xl font-black text-dark-navy">1500+ Tons/Year</p>
