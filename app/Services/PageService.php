@@ -77,8 +77,70 @@ final class PageService
                 'sections' => [
                     'about.hero' => [
                         'content' => [
-                            'heading' => 'Pioneering Paper Excellence Since 1995',
+                            'badge' => 'Precision & Quality',
+                            'heading' => 'Pioneering Paper Excellence Since 1995.',
                             'description' => 'Nutech Paper Products delivers dependable self-adhesive and release solutions for B2B industries.',
+                            'image_path' => 'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?auto=format&fit=crop&w=1600&q=80',
+                            'image_alt' => 'Industrial paper manufacturing facility with large machinery',
+                        ],
+                    ],
+                    'about.story' => [
+                        'content' => [
+                            'heading' => 'Our Story',
+                            'description_1' => 'Established in New Delhi in 1995, Nutech has been at the forefront of the paper industry for over two decades. What began as a local vision has grown into a national powerhouse in paper processing.',
+                            'description_2' => 'Nutech Paper Products began its journey with a vision to provide high-quality paper solutions. Over the years, we have grown into a leading manufacturer, known for our reliability and innovation in the B2B sector.',
+                            'years_value' => '28+',
+                            'years_label' => 'Years of Experience',
+                            'clients_value' => '1500+',
+                            'clients_label' => 'Clients Served',
+                            'image_path' => 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?auto=format&fit=crop&w=1200&q=80',
+                            'image_alt' => 'Close up of high quality adhesive paper rolls',
+                        ],
+                    ],
+                    'about.expertise' => [
+                        'content' => [
+                            'heading' => 'Our Expertise',
+                            'description' => 'Specialized manufacturing of self-adhesive papers and specialized films tailored for industrial requirements.',
+                            'item_1_icon' => 'precision_manufacturing',
+                            'item_1_title' => 'Self-Adhesive Solutions',
+                            'item_1_description' => 'Premium quality Chromo, Mirror Coat, and Woodfree self-adhesive papers for various surfaces.',
+                            'item_2_icon' => 'layers',
+                            'item_2_title' => 'Specialized Films',
+                            'item_2_description' => 'BOPP, PE, and PET films designed for durability and high-performance labeling applications.',
+                            'item_3_icon' => 'architecture',
+                            'item_3_title' => 'Custom Coating',
+                            'item_3_description' => 'Advanced siliconizing and adhesive coating techniques tailored to specific B2B needs.',
+                        ],
+                    ],
+                    'about.industries' => [
+                        'content' => [
+                            'heading' => 'Industries Served',
+                            'description' => 'Our products power critical operations across diverse industrial landscapes.',
+                            'cta_label' => 'Explore Applications',
+                            'cta_link' => '/contact-us',
+                            'item_1_title' => 'Packaging',
+                            'item_1_image' => 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=900&q=80',
+                            'item_1_alt' => 'Modern logistics and packaging warehouse',
+                            'item_2_title' => 'Printing',
+                            'item_2_image' => 'https://images.unsplash.com/photo-1589365278144-c9e705f843ba?auto=format&fit=crop&w=900&q=80',
+                            'item_2_alt' => 'Commercial printing machine',
+                            'item_3_title' => 'Labeling',
+                            'item_3_image' => 'https://images.unsplash.com/photo-1609833975787-5c143f373a97?auto=format&fit=crop&w=900&q=80',
+                            'item_3_alt' => 'Product containers with adhesive labels',
+                            'item_4_title' => 'Pharma & FMCG',
+                            'item_4_image' => 'https://images.unsplash.com/photo-1581091215367-59ab6dcef782?auto=format&fit=crop&w=900&q=80',
+                            'item_4_alt' => 'High-tech manufacturing facility interior',
+                        ],
+                    ],
+                    'about.quality' => [
+                        'content' => [
+                            'heading' => 'Quality Commitment',
+                            'description' => "At Nutech, quality is not a department; it's our core philosophy. Every roll of paper that leaves our facility undergoes rigorous testing to ensure it meets international B2B standards. We are committed to sustainable practices and continuous innovation.",
+                            'bullet_1' => 'ISO Certified Production Processes',
+                            'bullet_2' => '100% In-house Quality Inspection',
+                            'bullet_3' => 'Sustainable Material Sourcing',
+                            'image_path' => 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
+                            'image_alt' => 'Engineer inspecting material quality in a laboratory',
                         ],
                     ],
                 ],
@@ -120,4 +182,3 @@ final class PageService
         ];
     }
 }
-
