@@ -7,6 +7,16 @@ $primaryColor = (string) ($theme['primary_color'] ?? '#67C6D0');
 $primaryHover = (string) ($theme['primary_hover_color'] ?? '#2F8FA1');
 $darkNavy = (string) ($theme['dark_navy_color'] ?? '#0F1B2A');
 $backgroundLight = (string) ($theme['background_light_color'] ?? '#F8FAFC');
+$faviconPath = trim((string) ($site['favicon_path'] ?? ''));
+if ($faviconPath === '') {
+    $faviconPath = trim((string) ($site['logo_path'] ?? '/assets/img/nutech_square_logo.png'));
+}
+if ($faviconPath === '') {
+    $faviconPath = '/assets/img/nutech_square_logo.png';
+}
+$faviconUrl = preg_match('#^(https?:)?//#i', $faviconPath) === 1
+    ? $faviconPath
+    : ($faviconPath[0] === '/' ? path_url($faviconPath) : asset($faviconPath));
 ?>
 <head>
     <meta charset="UTF-8">
@@ -55,6 +65,9 @@ $backgroundLight = (string) ($theme['background_light_color'] ?? '#F8FAFC');
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="<?= e($faviconUrl) ?>">
+    <link rel="shortcut icon" href="<?= e($faviconUrl) ?>">
+    <link rel="apple-touch-icon" href="<?= e($faviconUrl) ?>">
     <link rel="stylesheet" href="<?= asset('assets/css/site.css') ?>">
     <?php if (!empty($headEndScripts) && is_array($headEndScripts)): ?>
         <?php foreach ($headEndScripts as $script): ?>
