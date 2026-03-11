@@ -154,6 +154,25 @@ final class PageService
                             'description' => 'Have questions about our premium paper products? Our team is ready to help.',
                         ],
                     ],
+                    'contact.form' => [
+                        'content' => [
+                            'heading' => 'Get in Touch',
+                            'submit_label' => 'Submit Inquiry',
+                            'inquiry_label' => 'Inquiry Type',
+                            'option_1' => 'Product Inquiry',
+                            'option_2' => 'Bulk Order',
+                            'option_3' => 'Technical Support',
+                            'option_4' => 'General Inquiry',
+                        ],
+                    ],
+                    'contact.sidebar' => [
+                        'content' => [
+                            'details_heading' => 'Contact Details',
+                            'urgent_heading' => 'Need urgent assistance?',
+                            'urgent_description' => 'Our team usually responds within one business day.',
+                            'urgent_button_label' => 'Call Now',
+                        ],
+                    ],
                 ],
             ],
             'product-catalog' => [
@@ -161,8 +180,32 @@ final class PageService
                 'sections' => [
                     'catalog.hero' => [
                         'content' => [
+                            'badge' => 'Industrial Excellence',
                             'heading' => 'Premium B2B Paper Solutions',
-                            'description' => 'Discover our full range of industrial-grade paper products.',
+                            'description' => 'Specializing in high-performance release papers, specialty foils, and adhesive stocks for global manufacturing.',
+                            'image_path' => 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1800&q=80',
+                            'image_alt' => 'Industrial paper manufacturing facility with rolls of paper',
+                            'primary_cta_label' => 'Download Brochure',
+                            'primary_cta_link' => '/contact-us',
+                            'secondary_cta_label' => 'Inquire Now',
+                            'secondary_cta_link' => '/contact-us',
+                        ],
+                    ],
+                    'catalog.listing' => [
+                        'content' => [
+                            'heading' => 'Product Catalog',
+                            'description' => 'Showing all industrial grade materials',
+                            'all_label' => 'All Products',
+                            'search_placeholder' => 'Search catalog...',
+                            'stock_label' => 'In Stock',
+                        ],
+                    ],
+                    'catalog.custom_cta' => [
+                        'content' => [
+                            'heading' => 'Custom Requirement?',
+                            'description' => "Can't find what you need? We offer custom coating and sizing solutions for unique industrial needs.",
+                            'button_label' => 'Contact Sales',
+                            'button_link' => '/contact-us',
                         ],
                     ],
                 ],

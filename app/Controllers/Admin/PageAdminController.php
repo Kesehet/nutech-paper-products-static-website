@@ -328,6 +328,95 @@ final class PageAdminController extends BaseAdminController
 
     private function defaultSectionsBySlug(string $slug): array
     {
+        if ($slug === 'contact-us') {
+            return [
+                [
+                    'section_key' => 'contact.intro',
+                    'section_label' => 'Contact Intro',
+                    'sort_order' => 1,
+                    'is_visible' => 1,
+                    'content' => [
+                        'heading' => "Let us start a conversation",
+                        'description' => 'Have questions about our premium paper products? Our team is ready to help.',
+                    ],
+                ],
+                [
+                    'section_key' => 'contact.form',
+                    'section_label' => 'Contact Form Labels',
+                    'sort_order' => 2,
+                    'is_visible' => 1,
+                    'content' => [
+                        'heading' => 'Get in Touch',
+                        'submit_label' => 'Submit Inquiry',
+                        'inquiry_label' => 'Inquiry Type',
+                        'option_1' => 'Product Inquiry',
+                        'option_2' => 'Bulk Order',
+                        'option_3' => 'Technical Support',
+                        'option_4' => 'General Inquiry',
+                    ],
+                ],
+                [
+                    'section_key' => 'contact.sidebar',
+                    'section_label' => 'Contact Sidebar',
+                    'sort_order' => 3,
+                    'is_visible' => 1,
+                    'content' => [
+                        'details_heading' => 'Contact Details',
+                        'urgent_heading' => 'Need urgent assistance?',
+                        'urgent_description' => 'Our team usually responds within one business day.',
+                        'urgent_button_label' => 'Call Now',
+                    ],
+                ],
+            ];
+        }
+
+        if ($slug === 'product-catalog') {
+            return [
+                [
+                    'section_key' => 'catalog.hero',
+                    'section_label' => 'Catalog Hero',
+                    'sort_order' => 1,
+                    'is_visible' => 1,
+                    'content' => [
+                        'badge' => 'Industrial Excellence',
+                        'heading' => 'Premium B2B Paper Solutions',
+                        'description' => 'Specializing in high-performance release papers, specialty foils, and adhesive stocks for global manufacturing.',
+                        'image_path' => 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1800&q=80',
+                        'image_alt' => 'Industrial paper manufacturing facility with rolls of paper',
+                        'primary_cta_label' => 'Download Brochure',
+                        'primary_cta_link' => '/contact-us',
+                        'secondary_cta_label' => 'Inquire Now',
+                        'secondary_cta_link' => '/contact-us',
+                    ],
+                ],
+                [
+                    'section_key' => 'catalog.listing',
+                    'section_label' => 'Catalog Listing',
+                    'sort_order' => 2,
+                    'is_visible' => 1,
+                    'content' => [
+                        'heading' => 'Product Catalog',
+                        'description' => 'Showing all industrial grade materials',
+                        'all_label' => 'All Products',
+                        'search_placeholder' => 'Search catalog...',
+                        'stock_label' => 'In Stock',
+                    ],
+                ],
+                [
+                    'section_key' => 'catalog.custom_cta',
+                    'section_label' => 'Catalog Custom CTA',
+                    'sort_order' => 3,
+                    'is_visible' => 1,
+                    'content' => [
+                        'heading' => 'Custom Requirement?',
+                        'description' => "Can't find what you need? We offer custom coating and sizing solutions for unique industrial needs.",
+                        'button_label' => 'Contact Sales',
+                        'button_link' => '/contact-us',
+                    ],
+                ],
+            ];
+        }
+
         if ($slug !== 'about-us') {
             return [];
         }

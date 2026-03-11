@@ -134,9 +134,12 @@ final class PageController
     {
         $page = $this->pageService->getBySlug('product-catalog');
         $category = trim((string) $request->query('category', ''));
+        $search = trim((string) $request->query('q', ''));
         $products = $this->productService->getPublished([
             'category' => $category !== '' ? $category : null,
+            'search' => $search !== '' ? $search : null,
         ]);
+        $categories = $this->productService->getCatalogCategories();
 
         $this->render(
             'pages/product-catalog',
@@ -144,6 +147,9 @@ final class PageController
             [
                 'page' => $page,
                 'products' => $products,
+                'categories' => $categories,
+                'currentCategory' => $category,
+                'search' => $search,
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
                     'title' => (string) ($page['title'] ?? 'Product Catalog | Nutech Paper Products'),
                 ]),
