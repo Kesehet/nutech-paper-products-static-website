@@ -31,6 +31,48 @@ AND NOT EXISTS (
 );
 
 INSERT INTO page_sections (page_id, section_key, section_label, content_json, is_visible, sort_order)
+SELECT p.id, 'home.why_choose_us', 'Why Choose Us', JSON_OBJECT(
+    'heading', 'Why Choose Us',
+    'description', 'Trusted partner for consistent quality, timely bulk supply, and application-driven engineering.',
+    'item_1_title', 'Trusted Since 1995',
+    'item_1_description', 'Long-term manufacturing experience across industries.',
+    'item_2_title', 'Consistent Quality',
+    'item_2_description', 'Controlled processes with strict quality checks.',
+    'item_3_title', 'Bulk Supply',
+    'item_3_description', 'Scalable production for recurring enterprise demand.',
+    'item_4_title', 'Competitive Pricing',
+    'item_4_description', 'Strong value through optimized sourcing and processes.'
+), 1, 2
+FROM pages p
+WHERE p.slug = 'home'
+AND NOT EXISTS (
+    SELECT 1 FROM page_sections ps WHERE ps.page_id = p.id AND ps.section_key = 'home.why_choose_us'
+);
+
+INSERT INTO page_sections (page_id, section_key, section_label, content_json, is_visible, sort_order)
+SELECT p.id, 'home.cta', 'Homepage CTA', JSON_OBJECT(
+    'heading', 'Send an Enquiry',
+    'description', 'Have a specific requirement or looking for a bulk quote? Our experts are ready to assist you with the right paper solutions.',
+    'phone_label', 'Phone',
+    'email_label', 'Email',
+    'address_label', 'Address',
+    'name_label', 'Name',
+    'name_placeholder', 'Full Name',
+    'email_form_label', 'Email',
+    'email_placeholder', 'email@example.com',
+    'product_interest_label', 'Product Interest',
+    'product_interest_placeholder', 'Select a product',
+    'message_label', 'Message',
+    'message_placeholder', 'Your requirements...',
+    'submit_label', 'Send Enquiry'
+), 1, 3
+FROM pages p
+WHERE p.slug = 'home'
+AND NOT EXISTS (
+    SELECT 1 FROM page_sections ps WHERE ps.page_id = p.id AND ps.section_key = 'home.cta'
+);
+
+INSERT INTO page_sections (page_id, section_key, section_label, content_json, is_visible, sort_order)
 SELECT p.id, 'about.hero', 'About Hero', JSON_OBJECT(
     'badge', 'Precision & Quality',
     'heading', 'Pioneering Paper Excellence Since 1995',
