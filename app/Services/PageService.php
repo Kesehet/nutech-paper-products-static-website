@@ -59,7 +59,7 @@ final class PageService
     {
         $defaults = [
             'home' => [
-                'title' => 'Nutech Paper Products | Self Adhesive & Release Paper Manufacturer',
+                'title' => 'Nuteck Paper Products | Self Adhesive & Release Paper Manufacturer',
                 'sections' => [
                     'home.hero' => [
                         'content' => [
@@ -105,13 +105,13 @@ final class PageService
                 ],
             ],
             'about-us' => [
-                'title' => 'About Us | Nutech Paper Products',
+                'title' => 'About Us | Nuteck Paper Products',
                 'sections' => [
                     'about.hero' => [
                         'content' => [
                             'badge' => 'Precision & Quality',
                             'heading' => 'Pioneering Paper Excellence Since 1995.',
-                            'description' => 'Nutech Paper Products delivers dependable self-adhesive and release solutions for B2B industries.',
+                            'description' => 'Nuteck Paper Products delivers dependable self-adhesive and release solutions for B2B industries.',
                             'image_path' => 'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?auto=format&fit=crop&w=1600&q=80',
                             'image_alt' => 'Industrial paper manufacturing facility with large machinery',
                         ],
@@ -119,8 +119,8 @@ final class PageService
                     'about.story' => [
                         'content' => [
                             'heading' => 'Our Story',
-                            'description_1' => 'Established in New Delhi in 1995, Nutech has been at the forefront of the paper industry for over two decades. What began as a local vision has grown into a national powerhouse in paper processing.',
-                            'description_2' => 'Nutech Paper Products began its journey with a vision to provide high-quality paper solutions. Over the years, we have grown into a leading manufacturer, known for our reliability and innovation in the B2B sector.',
+                            'description_1' => 'Established in New Delhi in 1995, Nuteck has been at the forefront of the paper industry for over two decades. What began as a local vision has grown into a national powerhouse in paper processing.',
+                            'description_2' => 'Nuteck Paper Products began its journey with a vision to provide high-quality paper solutions. Over the years, we have grown into a leading manufacturer, known for our reliability and innovation in the B2B sector.',
                             'years_value' => '28+',
                             'years_label' => 'Years of Experience',
                             'clients_value' => '1500+',
@@ -167,7 +167,7 @@ final class PageService
                     'about.quality' => [
                         'content' => [
                             'heading' => 'Quality Commitment',
-                            'description' => "At Nutech, quality is not a department; it's our core philosophy. Every roll of paper that leaves our facility undergoes rigorous testing to ensure it meets international B2B standards. We are committed to sustainable practices and continuous innovation.",
+                            'description' => "At Nuteck, quality is not a department; it's our core philosophy. Every roll of paper that leaves our facility undergoes rigorous testing to ensure it meets international B2B standards. We are committed to sustainable practices and continuous innovation.",
                             'bullet_1' => 'ISO Certified Production Processes',
                             'bullet_2' => '100% In-house Quality Inspection',
                             'bullet_3' => 'Sustainable Material Sourcing',
@@ -178,7 +178,7 @@ final class PageService
                 ],
             ],
             'contact-us' => [
-                'title' => 'Contact Us | Nutech Paper Products',
+                'title' => 'Contact Us | Nuteck Paper Products',
                 'sections' => [
                     'contact.intro' => [
                         'content' => [
@@ -213,7 +213,7 @@ final class PageService
                 ],
             ],
             'product-catalog' => [
-                'title' => 'Nutech Paper Products | B2B Product Catalog',
+                'title' => 'Nuteck Paper Products | B2B Product Catalog',
                 'sections' => [
                     'catalog.hero' => [
                         'content' => [

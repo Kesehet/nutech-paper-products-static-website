@@ -69,7 +69,7 @@ final class UserAdminController extends BaseAdminController
 
         $this->render('admin/users/index', $request, [
             'meta' => [
-                'title' => 'User Management | Nutech Admin',
+                'title' => 'User Management | Nuteck Admin',
                 'description' => 'Manage admin and content editor accounts.',
             ],
             'users' => $users,

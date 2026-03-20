@@ -140,7 +140,7 @@ final class SettingsAdminController extends BaseAdminController
 
         $this->render('admin/settings/index', $request, [
             'meta' => [
-                'title' => 'Site Settings | Nutech Admin',
+                'title' => 'Site Settings | Nuteck Admin',
                 'description' => 'Manage site identity, contact info, and theme values.',
             ],
             'sections' => $sections,

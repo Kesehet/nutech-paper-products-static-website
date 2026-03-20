@@ -1,7 +1,7 @@
-# Nutech Paper Products CMS Website Requirements
+# Nuteck Paper Products CMS Website Requirements
 
 ## 1) Project Overview
-Build a production-ready PHP 8+ website and admin panel for Nutech Paper Products on Hostinger shared hosting, using the approved screen designs in `screens/` as the visual source of truth.
+Build a production-ready PHP 8+ website and admin panel for Nuteck Paper Products on Hostinger shared hosting, using the approved screen designs in `screens/` as the visual source of truth.
 
 The system must deliver:
 - Public website with 5 pages:

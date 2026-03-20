@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$siteTitle = (string) ($site['title'] ?? 'Nutech Paper Products');
+$siteTitle = (string) ($site['title'] ?? 'Nuteck Paper Products');
 $footerNav = $footerNav ?? $primaryNav ?? [];
 $logoPath = trim((string) ($site['logo_path'] ?? '/assets/img/nutech_square_logo.png'));
 if ($logoPath === '') {

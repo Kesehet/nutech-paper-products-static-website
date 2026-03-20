@@ -63,7 +63,7 @@ final class ProductAdminController extends BaseAdminController
 
         $this->render('admin/products/index', $request, [
             'meta' => [
-                'title' => 'Products | Nutech Admin',
+                'title' => 'Products | Nuteck Admin',
                 'description' => 'Manage product catalog entries.',
             ],
             'products' => $products,
@@ -77,7 +77,7 @@ final class ProductAdminController extends BaseAdminController
         $this->requireAuth();
         $this->render('admin/products/form', $request, [
             'meta' => [
-                'title' => 'Create Product | Nutech Admin',
+                'title' => 'Create Product | Nuteck Admin',
                 'description' => 'Add a new catalog product.',
             ],
             'product' => $this->blankProduct(),
@@ -146,7 +146,7 @@ final class ProductAdminController extends BaseAdminController
 
         $this->render('admin/products/form', $request, [
             'meta' => [
-                'title' => 'Edit Product | Nutech Admin',
+                'title' => 'Edit Product | Nuteck Admin',
                 'description' => 'Update catalog product.',
             ],
             'product' => $product,

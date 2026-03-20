@@ -44,7 +44,7 @@ abstract class BaseAdminController
 
         View::render($template, array_merge([
             'meta' => $payload['meta'] ?? [
-                'title' => 'Admin | Nutech Paper Products',
+                'title' => 'Admin | Nuteck Paper Products',
                 'description' => 'CMS Admin',
             ],
             'currentPath' => $request->path(),

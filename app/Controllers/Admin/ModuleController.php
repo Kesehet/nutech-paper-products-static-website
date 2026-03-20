@@ -57,7 +57,7 @@ final class ModuleController
 
         View::render('admin/module-index', [
             'meta' => [
-                'title' => $moduleTitle . ' | Nutech Admin',
+                'title' => $moduleTitle . ' | Nuteck Admin',
                 'description' => $summary,
             ],
             'currentPath' => $request->path(),

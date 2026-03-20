@@ -1,4 +1,4 @@
-# Nutech Paper Products CMS (PHP)
+# Nuteck Paper Products CMS (PHP)
 
 CMS-driven PHP website + admin panel for Hostinger-compatible Apache/PHP hosting.
 

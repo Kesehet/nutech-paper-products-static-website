@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 $meta = $meta ?? [];
-$siteTitle = (string) ($site['title'] ?? env('APP_NAME', 'Nutech Paper Products'));
+$siteTitle = (string) ($site['title'] ?? env('APP_NAME', 'Nuteck Paper Products'));
 $primaryColor = (string) ($theme['primary_color'] ?? '#67C6D0');
 $primaryHover = (string) ($theme['primary_hover_color'] ?? '#2F8FA1');
 $darkNavy = (string) ($theme['dark_navy_color'] ?? '#0F1B2A');

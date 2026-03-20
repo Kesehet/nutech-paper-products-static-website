@@ -60,7 +60,7 @@ final class MediaAdminController extends BaseAdminController
 
         $this->render('admin/media/index', $request, [
             'meta' => [
-                'title' => 'Media Library | Nutech Admin',
+                'title' => 'Media Library | Nuteck Admin',
                 'description' => 'Upload and manage reusable media assets.',
             ],
             'media' => $media,

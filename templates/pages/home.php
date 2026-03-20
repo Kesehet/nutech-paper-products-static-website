@@ -27,7 +27,7 @@ if ($heroImagePath === '') {
 }
 $heroImageAlt = trim((string) ($site['home_hero_image_alt'] ?? ''));
 if ($heroImageAlt === '') {
-    $heroImageAlt = 'Nutech manufacturing';
+    $heroImageAlt = 'Nuteck manufacturing';
 }
 $heroImageUrl = preg_match('#^(https?:)?//#i', $heroImagePath) === 1
     ? $heroImagePath

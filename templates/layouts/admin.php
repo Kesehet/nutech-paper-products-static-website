@@ -14,7 +14,7 @@ $meta = $meta ?? [];
 <?php if ($isLoggedIn): ?>
 <div class="min-h-screen flex">
     <aside class="w-72 bg-dark-navy text-slate-100 p-6 hidden lg:block">
-        <a class="text-xl font-bold tracking-tight" href="<?= e(path_url('/admin/dashboard')) ?>">Nutech CMS</a>
+        <a class="text-xl font-bold tracking-tight" href="<?= e(path_url('/admin/dashboard')) ?>">Nuteck CMS</a>
         <p class="text-xs text-slate-400 mt-1">Role: <?= e((string) ($authUser['role'] ?? '')) ?></p>
         <nav class="mt-8 space-y-2 text-sm">
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/dashboard')) ?>">Dashboard</a>

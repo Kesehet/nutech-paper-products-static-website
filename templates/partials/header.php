@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 $currentPath = (string) ($currentPath ?? '/');
 $primaryNav = $primaryNav ?? [];
-$siteTitle = (string) ($site['title'] ?? 'Nutech Paper Products');
+$siteTitle = (string) ($site['title'] ?? 'Nuteck Paper Products');
 $logoPath = trim((string) ($site['logo_path'] ?? '/assets/img/nutech_square_logo.png'));
 if ($logoPath === '') {
     $logoPath = '/assets/img/nutech_square_logo.png';
