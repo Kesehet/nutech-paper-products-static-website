@@ -328,6 +328,64 @@ final class PageAdminController extends BaseAdminController
 
     private function defaultSectionsBySlug(string $slug): array
     {
+        if ($slug === 'home') {
+            return [
+                [
+                    'section_key' => 'home.hero',
+                    'section_label' => 'Homepage Hero',
+                    'sort_order' => 1,
+                    'is_visible' => 1,
+                    'content' => [
+                        'eyebrow' => 'Industrial Excellence Since 1995',
+                        'heading' => 'Trusted Manufacturer of Self Adhesive and Release Papers',
+                        'description' => 'Premium paper and coating solutions for packaging, labeling, and high-volume industrial use.',
+                        'primary_cta_label' => 'View Products',
+                        'primary_cta_link' => '/product-catalog',
+                    ],
+                ],
+                [
+                    'section_key' => 'home.why_choose_us',
+                    'section_label' => 'Why Choose Us',
+                    'sort_order' => 2,
+                    'is_visible' => 1,
+                    'content' => [
+                        'heading' => 'Why Choose Us',
+                        'description' => 'Trusted partner for consistent quality, timely bulk supply, and application-driven engineering.',
+                        'item_1_title' => 'Trusted Since 1995',
+                        'item_1_description' => 'Long-term manufacturing experience across industries.',
+                        'item_2_title' => 'Consistent Quality',
+                        'item_2_description' => 'Controlled processes with strict quality checks.',
+                        'item_3_title' => 'Bulk Supply',
+                        'item_3_description' => 'Scalable production for recurring enterprise demand.',
+                        'item_4_title' => 'Competitive Pricing',
+                        'item_4_description' => 'Strong value through optimized sourcing and processes.',
+                    ],
+                ],
+                [
+                    'section_key' => 'home.cta',
+                    'section_label' => 'Homepage CTA',
+                    'sort_order' => 3,
+                    'is_visible' => 1,
+                    'content' => [
+                        'heading' => 'Send an Enquiry',
+                        'description' => 'Have a specific requirement or looking for a bulk quote? Our experts are ready to assist you with the right paper solutions.',
+                        'phone_label' => 'Phone',
+                        'email_label' => 'Email',
+                        'address_label' => 'Address',
+                        'name_label' => 'Name',
+                        'name_placeholder' => 'Full Name',
+                        'email_form_label' => 'Email',
+                        'email_placeholder' => 'email@example.com',
+                        'product_interest_label' => 'Product Interest',
+                        'product_interest_placeholder' => 'Select a product',
+                        'message_label' => 'Message',
+                        'message_placeholder' => 'Your requirements...',
+                        'submit_label' => 'Send Enquiry',
+                    ],
+                ],
+            ];
+        }
+
         if ($slug === 'contact-us') {
             return [
                 [
