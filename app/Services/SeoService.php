@@ -14,7 +14,7 @@ final class SeoService
         $entity = $this->getSeo($entityType, $entityId);
 
         return [
-            'title' => (string) ($entity['meta_title'] ?? $global['meta_title'] ?? $fallback['title'] ?? env('APP_NAME', 'Nutech Paper Products')),
+            'title' => (string) ($entity['meta_title'] ?? $global['meta_title'] ?? $fallback['title'] ?? env('APP_NAME', 'Nuteck Paper Products')),
             'description' => (string) ($entity['meta_description'] ?? $global['meta_description'] ?? $fallback['description'] ?? ''),
             'keywords' => (string) ($entity['meta_keywords'] ?? $global['meta_keywords'] ?? ''),
             'canonical' => (string) ($entity['canonical_url'] ?? ''),

@@ -1,4 +1,4 @@
-# Nutech Paper Products - Frontend and Template Design Plan
+# Nuteck Paper Products - Frontend and Template Design Plan
 
 ## 1) Design Implementation Rules
 - Approved `screens/*/code.html` and `screens/*/screen.png` are the visual source of truth.

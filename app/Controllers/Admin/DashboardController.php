@@ -44,7 +44,7 @@ final class DashboardController extends BaseAdminController
 
         $this->render('admin/dashboard/index', $request, [
             'meta' => [
-                'title' => 'Admin Dashboard | Nutech Paper Products',
+                'title' => 'Admin Dashboard | Nuteck Paper Products',
                 'description' => 'CMS Dashboard',
             ],
             'stats' => $stats,

@@ -7,7 +7,7 @@ final class Config
 {
     public static function appName(): string
     {
-        return (string) env('APP_NAME', 'Nutech Paper Products');
+        return (string) env('APP_NAME', 'Nuteck Paper Products');
     }
 
     public static function isDebug(): bool

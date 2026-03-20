@@ -111,7 +111,7 @@ final class SeoAdminController extends BaseAdminController
 
         $this->render('admin/seo/index', $request, [
             'meta' => [
-                'title' => 'SEO Manager | Nutech Admin',
+                'title' => 'SEO Manager | Nuteck Admin',
                 'description' => 'Manage global and entity-level metadata.',
             ],
             'pages' => $pages,
@@ -147,7 +147,7 @@ final class SeoAdminController extends BaseAdminController
 
         $this->render('admin/seo/edit', $request, [
             'meta' => [
-                'title' => 'Edit SEO | Nutech Admin',
+                'title' => 'Edit SEO | Nuteck Admin',
                 'description' => 'Update SEO metadata.',
             ],
             'entityType' => $entityType,

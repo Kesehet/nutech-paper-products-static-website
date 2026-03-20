@@ -48,7 +48,7 @@ final class PageController
                 'page' => $page,
                 'products' => $products,
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
-                    'title' => (string) ($page['title'] ?? 'Nutech Paper Products'),
+                    'title' => (string) ($page['title'] ?? 'Nuteck Paper Products'),
                 ]),
             ]
         );
@@ -63,7 +63,7 @@ final class PageController
             [
                 'page' => $page,
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
-                    'title' => (string) ($page['title'] ?? 'About Us | Nutech Paper Products'),
+                    'title' => (string) ($page['title'] ?? 'About Us | Nuteck Paper Products'),
                 ]),
             ]
         );
@@ -78,7 +78,7 @@ final class PageController
             [
                 'page' => $page,
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
-                    'title' => (string) ($page['title'] ?? 'Contact Us | Nutech Paper Products'),
+                    'title' => (string) ($page['title'] ?? 'Contact Us | Nuteck Paper Products'),
                 ]),
                 'success' => Session::pullFlash('success'),
                 'error' => Session::pullFlash('error'),
@@ -151,7 +151,7 @@ final class PageController
                 'currentCategory' => $category,
                 'search' => $search,
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
-                    'title' => (string) ($page['title'] ?? 'Product Catalog | Nutech Paper Products'),
+                    'title' => (string) ($page['title'] ?? 'Product Catalog | Nuteck Paper Products'),
                 ]),
             ]
         );
@@ -174,7 +174,7 @@ final class PageController
                 'product' => $product,
                 'relatedProducts' => $this->productService->getRelated($slug),
                 'meta' => $this->seoService->resolve('product', (int) ($product['id'] ?? 0), [
-                    'title' => (string) ($product['title'] ?? 'Product Detail') . ' | Nutech Paper Products',
+                    'title' => (string) ($product['title'] ?? 'Product Detail') . ' | Nuteck Paper Products',
                     'description' => (string) ($product['short_description'] ?? ''),
                 ]),
             ]
@@ -188,7 +188,7 @@ final class PageController
             $request->path(),
             [
                 'meta' => $this->seoService->resolve('global', 0, [
-                    'title' => 'Page Not Found | Nutech Paper Products',
+                    'title' => 'Page Not Found | Nuteck Paper Products',
                 ]),
             ],
             404

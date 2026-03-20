@@ -76,7 +76,7 @@ INSERT INTO page_sections (page_id, section_key, section_label, content_json, is
 SELECT p.id, 'about.hero', 'About Hero', JSON_OBJECT(
     'badge', 'Precision & Quality',
     'heading', 'Pioneering Paper Excellence Since 1995',
-    'description', 'Nutech Paper Products delivers dependable self-adhesive and release solutions for B2B industries.',
+    'description', 'Nuteck Paper Products delivers dependable self-adhesive and release solutions for B2B industries.',
     'image_path', 'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?auto=format&fit=crop&w=1600&q=80',
     'image_alt', 'Industrial paper manufacturing facility with large machinery'
 ), 1, 1
@@ -89,8 +89,8 @@ AND NOT EXISTS (
 INSERT INTO page_sections (page_id, section_key, section_label, content_json, is_visible, sort_order)
 SELECT p.id, 'about.story', 'Our Story', JSON_OBJECT(
     'heading', 'Our Story',
-    'description_1', 'Established in New Delhi in 1995, Nutech has been at the forefront of the paper industry for over two decades. What began as a local vision has grown into a national powerhouse in paper processing.',
-    'description_2', 'Nutech Paper Products began its journey with a vision to provide high-quality paper solutions. Over the years, we have grown into a leading manufacturer, known for our reliability and innovation in the B2B sector.',
+    'description_1', 'Established in New Delhi in 1995, Nuteck has been at the forefront of the paper industry for over two decades. What began as a local vision has grown into a national powerhouse in paper processing.',
+    'description_2', 'Nuteck Paper Products began its journey with a vision to provide high-quality paper solutions. Over the years, we have grown into a leading manufacturer, known for our reliability and innovation in the B2B sector.',
     'years_value', '28+',
     'years_label', 'Years of Experience',
     'clients_value', '1500+',
@@ -152,7 +152,7 @@ AND NOT EXISTS (
 INSERT INTO page_sections (page_id, section_key, section_label, content_json, is_visible, sort_order)
 SELECT p.id, 'about.quality', 'Quality Commitment', JSON_OBJECT(
     'heading', 'Quality Commitment',
-    'description', 'At Nutech, quality is not a department; it''s our core philosophy. Every roll of paper that leaves our facility undergoes rigorous testing to ensure it meets international B2B standards. We are committed to sustainable practices and continuous innovation.',
+    'description', 'At Nuteck, quality is not a department; it''s our core philosophy. Every roll of paper that leaves our facility undergoes rigorous testing to ensure it meets international B2B standards. We are committed to sustainable practices and continuous innovation.',
     'bullet_1', 'ISO Certified Production Processes',
     'bullet_2', '100% In-house Quality Inspection',
     'bullet_3', 'Sustainable Material Sourcing',
@@ -230,10 +230,13 @@ WHERE c.slug = 'adhesive-papers'
 AND NOT EXISTS (SELECT 1 FROM products WHERE slug = 'pre-gummed-paper');
 
 INSERT INTO settings (setting_group, setting_key, setting_value, value_type, is_public) VALUES
-('site', 'title', 'Nutech Paper Products', 'string', 1),
+('site', 'title', 'Nuteck Paper Products', 'string', 1),
 ('site', 'logo_path', '/assets/img/nutech_square_logo.png', 'string', 1),
+('site', 'social_linkedin', '', 'string', 1),
+('site', 'social_facebook', '', 'string', 1),
+('site', 'social_instagram', '', 'string', 1),
 ('site', 'home_hero_image', 'https://images.unsplash.com/photo-1603484477859-abe6a73f9366?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'string', 1),
-('site', 'home_hero_image_alt', 'Nutech manufacturing', 'string', 1),
+('site', 'home_hero_image_alt', 'Nuteck manufacturing', 'string', 1),
 ('site', 'contact_email', 'info@nutechpaper.com', 'string', 1),
 ('site', 'contact_phone', '+91 11 5555 4444', 'string', 1),
 ('site', 'address', 'Plot No. 45, Okhla Industrial Estate, Phase III, New Delhi - 110020, India', 'string', 1),
@@ -244,7 +247,7 @@ INSERT INTO settings (setting_group, setting_key, setting_value, value_type, is_
 ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), value_type = VALUES(value_type), is_public = VALUES(is_public);
 
 INSERT INTO seo_meta (entity_type, entity_id, meta_title, meta_description, robots)
-VALUES ('global', 0, 'Nutech Paper Products', 'Industrial self-adhesive and release paper manufacturer for B2B applications.', 'index,follow')
+VALUES ('global', 0, 'Nuteck Paper Products', 'Industrial self-adhesive and release paper manufacturer for B2B applications.', 'index,follow')
 ON DUPLICATE KEY UPDATE meta_title = VALUES(meta_title), meta_description = VALUES(meta_description), robots = VALUES(robots);
 
 INSERT INTO navigation_items (menu_key, label, href, sort_order, is_active) VALUES

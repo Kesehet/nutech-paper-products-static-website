@@ -19,7 +19,7 @@ final class AuthController extends BaseAdminController
 
         $this->render('admin/auth/login', $request, [
             'meta' => [
-                'title' => 'Admin Login | Nutech Paper Products',
+                'title' => 'Admin Login | Nuteck Paper Products',
                 'description' => 'CMS Admin Login',
             ],
         ]);

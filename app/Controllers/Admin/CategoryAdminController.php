@@ -60,7 +60,7 @@ final class CategoryAdminController extends BaseAdminController
 
         $this->render('admin/categories/index', $request, [
             'meta' => [
-                'title' => 'Product Categories | Nutech Admin',
+                'title' => 'Product Categories | Nuteck Admin',
                 'description' => 'Manage product categories and ordering.',
             ],
             'categories' => $categories,

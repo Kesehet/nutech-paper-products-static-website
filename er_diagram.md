@@ -1,4 +1,4 @@
-# Nutech Paper Products CMS - ER Diagram and Data Model
+# Nuteck Paper Products CMS - ER Diagram and Data Model
 
 ## 1) Modeling Strategy
 - Use a normalized core schema for users, pages, products, media, and settings.
