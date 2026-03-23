@@ -201,11 +201,17 @@ final class PageController
             'schema_json' => (string) ($blog['schema_json'] ?? ''),
         ];
 
+        $recommendedBlogs = array_values(array_filter(
+            $this->blogService->getPublished(6),
+            static fn (array $item): bool => (string) ($item['slug'] ?? '') !== $slug
+        ));
+
         $this->render(
             'pages/blog-detail',
             $request->path(),
             [
                 'blog' => $blog,
+                'recommendedBlogs' => array_slice($recommendedBlogs, 0, 3),
                 'meta' => $meta,
             ]
         );
