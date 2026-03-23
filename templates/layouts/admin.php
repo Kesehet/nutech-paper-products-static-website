@@ -20,6 +20,7 @@ $meta = $meta ?? [];
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/dashboard')) ?>">Dashboard</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/pages')) ?>">Pages</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/products')) ?>">Products</a>
+            <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/blogs')) ?>">Blogs</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/categories')) ?>">Categories</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/media')) ?>">Media</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/seo')) ?>">SEO</a>

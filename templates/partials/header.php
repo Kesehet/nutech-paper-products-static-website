@@ -50,7 +50,10 @@ $renderSocialIcon = static function (string $network): string {
             <?php foreach ($primaryNav as $item): ?>
                 <?php
                 $href = (string) ($item['href'] ?? '#');
-                $isActive = $currentPath === rtrim($href, '/') || ($href === '/' && $currentPath === '/');
+                $normalizedHref = rtrim($href, '/');
+                $isActive = $currentPath === $normalizedHref
+                    || ($href === '/' && $currentPath === '/')
+                    || ($normalizedHref !== '' && $normalizedHref !== '/' && str_starts_with($currentPath, $normalizedHref . '/'));
                 ?>
                 <a class="text-sm font-medium transition-colors <?= $isActive ? 'text-primary' : 'text-slate-300 hover:text-primary' ?>" href="<?= e(path_url($href)) ?>">
                     <?= e((string) ($item['label'] ?? '')) ?>

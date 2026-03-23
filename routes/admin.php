@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Controllers\Admin\AuthController;
+use App\Controllers\Admin\BlogAdminController;
 use App\Controllers\Admin\CategoryAdminController;
 use App\Controllers\Admin\DashboardController;
 use App\Controllers\Admin\MediaAdminController;
@@ -22,6 +23,13 @@ $router->get('/admin/pages/{id}/edit', [PageAdminController::class, 'edit']);
 $router->post('/admin/pages/{id}/update', [PageAdminController::class, 'update']);
 
 $router->get('/admin/products', [ProductAdminController::class, 'index']);
+$router->get('/admin/blogs', [BlogAdminController::class, 'index']);
+$router->get('/admin/blogs/create', [BlogAdminController::class, 'create']);
+$router->post('/admin/blogs/store', [BlogAdminController::class, 'store']);
+$router->get('/admin/blogs/{id}/edit', [BlogAdminController::class, 'edit']);
+$router->post('/admin/blogs/{id}/update', [BlogAdminController::class, 'update']);
+$router->post('/admin/blogs/{id}/delete', [BlogAdminController::class, 'delete']);
+
 $router->get('/admin/products/create', [ProductAdminController::class, 'create']);
 $router->post('/admin/products/store', [ProductAdminController::class, 'store']);
 $router->get('/admin/products/{id}/edit', [ProductAdminController::class, 'edit']);
@@ -35,6 +43,8 @@ $router->post('/admin/categories/{id}/delete', [CategoryAdminController::class, 
 
 $router->get('/admin/media', [MediaAdminController::class, 'index']);
 $router->post('/admin/media/upload', [MediaAdminController::class, 'upload']);
+$router->post('/admin/media/upload-async', [MediaAdminController::class, 'uploadAsync']);
+$router->post('/admin/media/ckeditor-upload', [MediaAdminController::class, 'ckeditorUpload']);
 $router->post('/admin/media/{id}/delete', [MediaAdminController::class, 'delete']);
 
 $router->get('/admin/seo', [SeoAdminController::class, 'index']);

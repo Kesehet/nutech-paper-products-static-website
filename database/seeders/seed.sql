@@ -13,6 +13,7 @@ INSERT INTO pages (title, slug, template_key, is_system, is_published) VALUES
 ('Homepage', 'home', 'home', 1, 1),
 ('About Us', 'about-us', 'about', 1, 1),
 ('Contact Us', 'contact-us', 'contact', 1, 1),
+('Blogs', 'blogs', 'blogs', 1, 1),
 ('Product Catalog', 'product-catalog', 'product_catalog', 1, 1)
 ON DUPLICATE KEY UPDATE title = VALUES(title), template_key = VALUES(template_key), is_published = VALUES(is_published);
 
@@ -165,6 +166,19 @@ AND NOT EXISTS (
     SELECT 1 FROM page_sections ps WHERE ps.page_id = p.id AND ps.section_key = 'about.quality'
 );
 
+
+INSERT INTO page_sections (page_id, section_key, section_label, content_json, is_visible, sort_order)
+SELECT p.id, 'blogs.hero', 'Blogs Hero', JSON_OBJECT(
+    'badge', 'Insights & Updates',
+    'heading', 'Our Blog',
+    'description', 'Read the latest updates, product knowledge, and industry insights from Nuteck Paper Products.'
+), 1, 1
+FROM pages p
+WHERE p.slug = 'blogs'
+AND NOT EXISTS (
+    SELECT 1 FROM page_sections ps WHERE ps.page_id = p.id AND ps.section_key = 'blogs.hero'
+);
+
 INSERT INTO page_sections (page_id, section_key, section_label, content_json, is_visible, sort_order)
 SELECT p.id, 'contact.intro', 'Contact Intro', JSON_OBJECT(
     'heading', 'Let us start a conversation',
@@ -254,9 +268,24 @@ INSERT INTO navigation_items (menu_key, label, href, sort_order, is_active) VALU
 ('primary', 'Home', '/', 1, 1),
 ('primary', 'Products', '/product-catalog', 2, 1),
 ('primary', 'About', '/about-us', 3, 1),
-('primary', 'Contact', '/contact-us', 4, 1),
+('primary', 'Blogs', '/blogs', 4, 1),
+('primary', 'Contact', '/contact-us', 5, 1),
 ('footer', 'Home', '/', 1, 1),
 ('footer', 'Products', '/product-catalog', 2, 1),
 ('footer', 'About Us', '/about-us', 3, 1),
-('footer', 'Contact', '/contact-us', 4, 1)
+('footer', 'Blogs', '/blogs', 4, 1),
+('footer', 'Contact', '/contact-us', 5, 1)
 ON DUPLICATE KEY UPDATE href = VALUES(href), sort_order = VALUES(sort_order), is_active = VALUES(is_active);
+
+
+INSERT INTO blogs (title, slug, excerpt, content_html, status, published_at, seo_title, seo_description, robots)
+SELECT 'How Release Papers Support Consistent Converting Performance', 'how-release-papers-support-consistent-converting-performance',
+       'A quick look at how release papers help manufacturers maintain stable converting and labeling operations.',
+       '<p>Release papers are a critical component in high-volume converting operations because they provide a controlled separation layer for pressure-sensitive materials.</p><p>At Nuteck Paper Products, we focus on consistent coating quality, dimensional stability, and dependable release values so manufacturers can reduce waste and improve throughput.</p><h2>Why consistency matters</h2><p>When release values fluctuate, operations can experience downtime, waste, and quality issues. A well-engineered release base helps teams maintain predictable production output.</p><ul><li>Stable release characteristics</li><li>Good web handling</li><li>Improved downstream performance</li></ul>',
+       'published', NOW(),
+       'How Release Papers Support Consistent Converting Performance | Nuteck',
+       'Learn how release papers contribute to stable converting performance and efficient manufacturing workflows.',
+       'index,follow'
+WHERE NOT EXISTS (
+    SELECT 1 FROM blogs WHERE slug = 'how-release-papers-support-consistent-converting-performance'
+);

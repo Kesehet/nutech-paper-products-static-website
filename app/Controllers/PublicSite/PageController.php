@@ -9,6 +9,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Core\View;
+use App\Services\BlogService;
 use App\Services\NavigationService;
 use App\Services\PageService;
 use App\Services\ProductService;
@@ -21,6 +22,7 @@ final class PageController
 {
     private PageService $pageService;
     private ProductService $productService;
+    private BlogService $blogService;
     private SettingService $settingService;
     private SeoService $seoService;
     private ScriptService $scriptService;
@@ -30,6 +32,7 @@ final class PageController
     {
         $this->pageService = new PageService();
         $this->productService = new ProductService();
+        $this->blogService = new BlogService();
         $this->settingService = new SettingService();
         $this->seoService = new SeoService();
         $this->scriptService = new ScriptService();
@@ -153,6 +156,57 @@ final class PageController
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
                     'title' => (string) ($page['title'] ?? 'Product Catalog | Nuteck Paper Products'),
                 ]),
+            ]
+        );
+    }
+
+    public function blogs(Request $request): void
+    {
+        $page = $this->pageService->getBySlug('blogs');
+        $blogs = $this->blogService->getPublished();
+
+        $this->render(
+            'pages/blogs',
+            $request->path(),
+            [
+                'page' => $page,
+                'blogs' => $blogs,
+                'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
+                    'title' => (string) ($page['title'] ?? 'Blogs | Nuteck Paper Products'),
+                    'description' => 'Latest updates, product stories, and industry insights from Nuteck Paper Products.',
+                ]),
+            ]
+        );
+    }
+
+    public function blogDetail(Request $request, array $params): void
+    {
+        $slug = (string) ($params['slug'] ?? '');
+        $blog = $this->blogService->findPublishedBySlug($slug);
+
+        if ($blog === null) {
+            $this->notFound($request);
+            return;
+        }
+
+        $meta = [
+            'title' => (string) ($blog['seo_title'] ?? '') !== '' ? (string) $blog['seo_title'] : ((string) ($blog['title'] ?? 'Blog') . ' | Nuteck Paper Products'),
+            'description' => (string) ($blog['seo_description'] ?? '') !== '' ? (string) $blog['seo_description'] : (string) ($blog['excerpt'] ?? ''),
+            'keywords' => (string) ($blog['seo_keywords'] ?? ''),
+            'canonical' => (string) ($blog['canonical_url'] ?? ''),
+            'robots' => (string) ($blog['robots'] ?? 'index,follow'),
+            'og_title' => (string) ($blog['og_title'] ?? '') !== '' ? (string) $blog['og_title'] : ((string) ($blog['seo_title'] ?? '') !== '' ? (string) $blog['seo_title'] : (string) ($blog['title'] ?? 'Blog')),
+            'og_description' => (string) ($blog['og_description'] ?? '') !== '' ? (string) $blog['og_description'] : ((string) ($blog['seo_description'] ?? '') !== '' ? (string) $blog['seo_description'] : (string) ($blog['excerpt'] ?? '')),
+            'og_image' => !empty($blog['og_image_path']) ? path_url((string) $blog['og_image_path']) : (!empty($blog['featured_image_path']) ? path_url((string) $blog['featured_image_path']) : ''),
+            'schema_json' => (string) ($blog['schema_json'] ?? ''),
+        ];
+
+        $this->render(
+            'pages/blog-detail',
+            $request->path(),
+            [
+                'blog' => $blog,
+                'meta' => $meta,
             ]
         );
     }
