@@ -72,28 +72,56 @@ final class AutoSync
 
     private static function shouldSync(PDO $pdo): bool
     {
-        $database = (string) env('DB_DATABASE', '');
-        if ($database === '') {
-            return false;
-        }
+        $requiredTables = [
+            'users',
+            'pages',
+            'media',
+            'page_sections',
+            'product_categories',
+            'products',
+            'blogs',
+            'product_images',
+            'seo_meta',
+            'settings',
+            'navigation_items',
+            'activity_logs',
+            'contact_inquiries',
+        ];
 
-        $stmt = $pdo->prepare(
-            'SELECT COUNT(*) FROM information_schema.tables
-             WHERE table_schema = :db_name AND table_name = :table_name'
-        );
-        $stmt->execute([
-            'db_name' => $database,
-            'table_name' => 'users',
-        ]);
-        $exists = (int) $stmt->fetchColumn() > 0;
-
-        if (!$exists) {
+        if (self::findFirstMissingTable($pdo, $requiredTables) !== null) {
             return true;
         }
 
         $userCountStmt = $pdo->query('SELECT COUNT(*) FROM users');
         $userCount = (int) $userCountStmt->fetchColumn();
         return $userCount === 0;
+    }
+
+    private static function findFirstMissingTable(PDO $pdo, array $tableNames): ?string
+    {
+        $database = (string) env('DB_DATABASE', '');
+        if ($database === '') {
+            return null;
+        }
+
+        $stmt = $pdo->prepare(
+            'SELECT COUNT(*) FROM information_schema.tables
+             WHERE table_schema = :db_name AND table_name = :table_name'
+        );
+
+        foreach ($tableNames as $tableName) {
+            $stmt->execute([
+                'db_name' => $database,
+                'table_name' => $tableName,
+            ]);
+
+            if ((int) $stmt->fetchColumn() === 0) {
+                self::log(sprintf('AutoSync detected missing table "%s" and will apply schema updates.', $tableName));
+                return $tableName;
+            }
+        }
+
+        return null;
     }
 
     private static function runSqlFile(PDO $pdo, string $filePath): void
