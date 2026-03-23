@@ -171,12 +171,35 @@ INSERT INTO page_sections (page_id, section_key, section_label, content_json, is
 SELECT p.id, 'blogs.hero', 'Blogs Hero', JSON_OBJECT(
     'badge', 'Insights & Updates',
     'heading', 'Our Blog',
-    'description', 'Read the latest updates, product knowledge, and industry insights from Nuteck Paper Products.'
+    'description', 'Read the latest updates, product knowledge, and industry insights from Nuteck Paper Products.',
+    'background_image_path', '',
+    'background_image_alt', 'Blog page hero background',
+    'primary_cta_label', 'Explore Products',
+    'primary_cta_link', '/product-catalog',
+    'secondary_cta_label', 'Contact Us',
+    'secondary_cta_link', '/contact-us'
 ), 1, 1
 FROM pages p
 WHERE p.slug = 'blogs'
 AND NOT EXISTS (
     SELECT 1 FROM page_sections ps WHERE ps.page_id = p.id AND ps.section_key = 'blogs.hero'
+);
+
+INSERT INTO page_sections (page_id, section_key, section_label, content_json, is_visible, sort_order)
+SELECT p.id, 'blogs.listing', 'Blogs Listing', JSON_OBJECT(
+    'section_label', 'Latest articles',
+    'heading', 'Fresh thinking from the Nuteck team',
+    'description', 'Browse product know-how, manufacturing updates, and practical guidance for labels, packaging, and release applications.',
+    'featured_label', 'Featured article',
+    'read_more_label', 'Read article',
+    'published_label', 'Published',
+    'empty_heading', 'Blogs coming soon',
+    'empty_description', 'Publish your first post from the admin panel to populate this page.'
+), 1, 2
+FROM pages p
+WHERE p.slug = 'blogs'
+AND NOT EXISTS (
+    SELECT 1 FROM page_sections ps WHERE ps.page_id = p.id AND ps.section_key = 'blogs.listing'
 );
 
 INSERT INTO page_sections (page_id, section_key, section_label, content_json, is_visible, sort_order)
