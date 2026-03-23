@@ -486,6 +486,44 @@ final class PageAdminController extends BaseAdminController
             ];
         }
 
+        if ($slug === 'blogs') {
+            return [
+                [
+                    'section_key' => 'blogs.hero',
+                    'section_label' => 'Blogs Hero',
+                    'sort_order' => 1,
+                    'is_visible' => 1,
+                    'content' => [
+                        'badge' => 'Insights & Updates',
+                        'heading' => 'Our Blog',
+                        'description' => 'Read the latest updates, product knowledge, and industry insights from Nuteck Paper Products.',
+                        'background_image_path' => '',
+                        'background_image_alt' => 'Blog page hero background',
+                        'primary_cta_label' => 'Explore Products',
+                        'primary_cta_link' => '/product-catalog',
+                        'secondary_cta_label' => 'Contact Us',
+                        'secondary_cta_link' => '/contact-us',
+                    ],
+                ],
+                [
+                    'section_key' => 'blogs.listing',
+                    'section_label' => 'Blogs Listing',
+                    'sort_order' => 2,
+                    'is_visible' => 1,
+                    'content' => [
+                        'section_label' => 'Latest articles',
+                        'heading' => 'Fresh thinking from the Nuteck team',
+                        'description' => 'Browse product know-how, manufacturing updates, and practical guidance for labels, packaging, and release applications.',
+                        'featured_label' => 'Featured article',
+                        'read_more_label' => 'Read article',
+                        'published_label' => 'Published',
+                        'empty_heading' => 'Blogs coming soon',
+                        'empty_description' => 'Publish your first post from the admin panel to populate this page.',
+                    ],
+                ],
+            ];
+        }
+
         if ($slug !== 'about-us') {
             return [];
         }
