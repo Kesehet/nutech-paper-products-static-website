@@ -212,6 +212,18 @@ final class PageService
                     ],
                 ],
             ],
+            'blogs' => [
+                'title' => 'Blogs | Nuteck Paper Products',
+                'sections' => [
+                    'blogs.hero' => [
+                        'content' => [
+                            'badge' => 'Insights & Updates',
+                            'heading' => 'Our Blog',
+                            'description' => 'Read the latest updates, product knowledge, and industry insights from Nuteck Paper Products.',
+                        ],
+                    ],
+                ],
+            ],
             'product-catalog' => [
                 'title' => 'Nuteck Paper Products | B2B Product Catalog',
                 'sections' => [

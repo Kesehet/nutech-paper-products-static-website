@@ -108,6 +108,35 @@ CREATE TABLE IF NOT EXISTS products (
     CONSTRAINT fk_products_updated_by FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS blogs (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(190) NOT NULL UNIQUE,
+    excerpt TEXT NULL,
+    content_html LONGTEXT NULL,
+    featured_image_id INT UNSIGNED NULL,
+    status ENUM('draft', 'published', 'archived') NOT NULL DEFAULT 'draft',
+    published_at TIMESTAMP NULL DEFAULT NULL,
+    seo_title VARCHAR(255) NULL,
+    seo_description TEXT NULL,
+    seo_keywords VARCHAR(255) NULL,
+    canonical_url VARCHAR(500) NULL,
+    robots VARCHAR(100) NULL DEFAULT 'index,follow',
+    og_title VARCHAR(255) NULL,
+    og_description TEXT NULL,
+    og_image_id INT UNSIGNED NULL,
+    schema_json JSON NULL,
+    created_by INT UNSIGNED NULL,
+    updated_by INT UNSIGNED NULL,
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_blogs_status_published (status, published_at),
+    CONSTRAINT fk_blogs_featured_image FOREIGN KEY (featured_image_id) REFERENCES media(id) ON DELETE SET NULL,
+    CONSTRAINT fk_blogs_og_image FOREIGN KEY (og_image_id) REFERENCES media(id) ON DELETE SET NULL,
+    CONSTRAINT fk_blogs_created_by FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+    CONSTRAINT fk_blogs_updated_by FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS product_images (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     product_id INT UNSIGNED NOT NULL,

@@ -73,11 +73,14 @@ CMS-driven PHP website + admin panel for Hostinger-compatible Apache/PHP hosting
   - `/contact-us`
   - `/product-catalog`
   - `/product/{slug}`
+  - `/blogs`
+  - `/blogs/{slug}`
 - Admin:
   - `/admin/login`
   - `/admin/dashboard`
   - `/admin/pages`
   - `/admin/products`
+  - `/admin/blogs`
   - `/admin/media`
   - `/admin/seo`
   - `/admin/settings`

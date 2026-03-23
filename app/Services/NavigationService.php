@@ -30,6 +30,7 @@ final class NavigationService
             ['label' => 'Home', 'href' => '/'],
             ['label' => 'Products', 'href' => '/product-catalog'],
             ['label' => 'About', 'href' => '/about-us'],
+            ['label' => 'Blogs', 'href' => '/blogs'],
             ['label' => 'Contact', 'href' => '/contact-us'],
         ];
     }
