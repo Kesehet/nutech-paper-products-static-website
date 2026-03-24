@@ -17,7 +17,7 @@ $ogMedia = $mediaLookup[$ogImageId] ?? null;
     <div class="flex items-start justify-between gap-4 mb-6">
         <div>
             <h2 class="text-2xl font-black text-dark-navy"><?= e((string) ($submitLabel ?? 'Save Blog')) ?></h2>
-            <p class="text-sm text-slate-600 mt-1">Use CKEditor for rich content, upload images inline, and manage per-post SEO in one place.</p>
+            <p class="text-sm text-slate-600 mt-1">Use the rich text editor for content, upload images inline, and manage per-post SEO in one place.</p>
         </div>
         <a href="<?= e(path_url('/admin/blogs')) ?>" class="text-sm font-semibold text-primary hover:underline">Back to Blogs</a>
     </div>
@@ -117,7 +117,7 @@ $ogMedia = $mediaLookup[$ogImageId] ?? null;
             <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
                 <div>
                     <h3 class="text-sm font-bold text-slate-800">Body Content</h3>
-                    <p class="text-xs text-slate-500">Rich editor with inline image uploads via CKEditor 4.</p>
+                    <p class="text-xs text-slate-500">Rich editor with inline image uploads.</p>
                 </div>
                 <span id="upload-feedback" class="text-xs text-slate-500"></span>
             </div>
@@ -196,7 +196,7 @@ $ogMedia = $mediaLookup[$ogImageId] ?? null;
     </div>
 </div>
 
-<script src="https://cdn.ckeditor.com/4.25.1-lts/full-all/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js"></script>
 <script>
 (() => {
     const csrfToken = <?= json_encode((string) $csrfToken) ?>;
