@@ -10,3 +10,7 @@ html, body {
         "opsz" 24;
 }
 
+
+.cke_notification_message {
+    display: none;
+}
