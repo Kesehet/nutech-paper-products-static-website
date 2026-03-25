@@ -121,7 +121,7 @@ $heroImageUrl = preg_match('#^(https?:)?//#i', $heroImagePath) === 1
                         <span class="material-symbols-outlined">mail</span>
                         <div>
                             <p class="text-xs uppercase tracking-wider text-slate-400 mb-1"><?= e((string) ($homeCtaContent['email_label'] ?? 'Email')) ?></p>
-                            <span class="font-medium"><?= e((string) ($site['contact_email'] ?? 'sales@nutechpaper.com')) ?></span>
+                            <span class="font-medium"><?= e((string) ($site['contact_email'] ?? 'sales@nuteckpaper.com')) ?></span>
                         </div>
                     </div>
                     <div class="flex items-center gap-4">

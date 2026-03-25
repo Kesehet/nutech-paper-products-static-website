@@ -7,9 +7,9 @@ if ($footerTagline === '') {
     $footerTagline = 'Trusted partner for high-performance self-adhesive and release paper solutions.';
 }
 $footerNav = $footerNav ?? $primaryNav ?? [];
-$logoPath = trim((string) ($site['logo_path'] ?? '/assets/img/nutech_square_logo.png'));
+$logoPath = trim((string) ($site['logo_path'] ?? '/assets/img/nuteck_square_logo.png'));
 if ($logoPath === '') {
-    $logoPath = '/assets/img/nutech_square_logo.png';
+    $logoPath = '/assets/img/nuteck_square_logo.png';
 }
 $logoUrl = preg_match('#^(https?:)?//#i', $logoPath) === 1
     ? $logoPath
@@ -93,7 +93,7 @@ $renderSocialIcon = static function (string $network): string {
                 <h4 class="text-white font-bold mb-4">Contact</h4>
                 <p class="text-sm text-slate-400"><?= e((string) ($site['address'] ?? 'Plot No. 45, Okhla Industrial Estate, Phase III, New Delhi - 110020, India')) ?></p>
                 <p class="text-sm text-slate-400 mt-2"><?= e((string) ($site['contact_phone'] ?? '+91 11 5555 4444')) ?></p>
-                <p class="text-sm text-slate-400"><?= e((string) ($site['contact_email'] ?? 'info@nutechpaper.com')) ?></p>
+                <p class="text-sm text-slate-400"><?= e((string) ($site['contact_email'] ?? 'info@nuteckpaper.com')) ?></p>
             </div>
         </div>
         <div class="mt-10 border-t border-slate-800 pt-6 flex flex-col md:flex-row gap-3 justify-between">

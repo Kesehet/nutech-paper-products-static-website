@@ -4,9 +4,9 @@ declare(strict_types=1);
 $currentPath = (string) ($currentPath ?? '/');
 $primaryNav = $primaryNav ?? [];
 $siteTitle = (string) ($site['title'] ?? 'Nuteck Paper Products');
-$logoPath = trim((string) ($site['logo_path'] ?? '/assets/img/nutech_square_logo.png'));
+$logoPath = trim((string) ($site['logo_path'] ?? '/assets/img/nuteck_square_logo.png'));
 if ($logoPath === '') {
-    $logoPath = '/assets/img/nutech_square_logo.png';
+    $logoPath = '/assets/img/nuteck_square_logo.png';
 }
 $logoUrl = preg_match('#^(https?:)?//#i', $logoPath) === 1
     ? $logoPath

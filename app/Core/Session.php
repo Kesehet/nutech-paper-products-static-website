@@ -11,7 +11,7 @@ final class Session
             return;
         }
 
-        $name = (string) env('SESSION_NAME', 'nutech_session');
+        $name = (string) env('SESSION_NAME', 'nuteck_session');
         session_name($name);
         session_start();
     }
