@@ -2,6 +2,10 @@
 declare(strict_types=1);
 
 $siteTitle = (string) ($site['title'] ?? 'Nuteck Paper Products');
+$footerTagline = trim((string) ($site['footer_tagline'] ?? ''));
+if ($footerTagline === '') {
+    $footerTagline = 'Trusted partner for high-performance self-adhesive and release paper solutions.';
+}
 $footerNav = $footerNav ?? $primaryNav ?? [];
 $logoPath = trim((string) ($site['logo_path'] ?? '/assets/img/nutech_square_logo.png'));
 if ($logoPath === '') {
@@ -45,7 +49,7 @@ $renderSocialIcon = static function (string $network): string {
                     <span class="text-white font-bold"><?= e($siteTitle) ?></span>
                 </a>
                 <p class="text-sm text-slate-400">
-                    Trusted partner for high-performance self-adhesive and release paper solutions.
+                    <?= e($footerTagline) ?>
                 </p>
                 <?php if ($socialLinks !== []): ?>
                     <div class="mt-5 flex items-center gap-3" aria-label="Social media links">
