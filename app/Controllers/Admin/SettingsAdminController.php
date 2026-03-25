@@ -21,6 +21,13 @@ final class SettingsAdminController extends BaseAdminController
             'label' => 'Site Title',
             'description' => 'Shown in header, footer, and default page metadata.',
         ],
+        'site.footer_tagline' => [
+            'type' => 'string',
+            'input' => 'textarea',
+            'section' => 'Branding',
+            'label' => 'Footer Tagline',
+            'description' => 'Text shown under the footer logo.',
+        ],
         'site.logo_path' => [
             'type' => 'string',
             'input' => 'text',

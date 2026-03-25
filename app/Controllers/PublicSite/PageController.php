@@ -43,6 +43,7 @@ final class PageController
     {
         $page = $this->pageService->getBySlug('home');
         $products = array_slice($this->productService->getPublished(), 0, 5);
+        $siteTitle = $this->siteTitle();
 
         $this->render(
             'pages/home',
@@ -51,7 +52,7 @@ final class PageController
                 'page' => $page,
                 'products' => $products,
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
-                    'title' => (string) ($page['title'] ?? 'Nuteck Paper Products'),
+                    'title' => (string) ($page['title'] ?? $siteTitle),
                 ]),
             ]
         );
@@ -60,13 +61,14 @@ final class PageController
     public function about(Request $request): void
     {
         $page = $this->pageService->getBySlug('about-us');
+        $siteTitle = $this->siteTitle();
         $this->render(
             'pages/about',
             $request->path(),
             [
                 'page' => $page,
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
-                    'title' => (string) ($page['title'] ?? 'About Us | Nuteck Paper Products'),
+                    'title' => (string) ($page['title'] ?? ('About Us | ' . $siteTitle)),
                 ]),
             ]
         );
@@ -75,13 +77,14 @@ final class PageController
     public function contact(Request $request): void
     {
         $page = $this->pageService->getBySlug('contact-us');
+        $siteTitle = $this->siteTitle();
         $this->render(
             'pages/contact',
             $request->path(),
             [
                 'page' => $page,
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
-                    'title' => (string) ($page['title'] ?? 'Contact Us | Nuteck Paper Products'),
+                    'title' => (string) ($page['title'] ?? ('Contact Us | ' . $siteTitle)),
                 ]),
                 'success' => Session::pullFlash('success'),
                 'error' => Session::pullFlash('error'),
@@ -136,6 +139,7 @@ final class PageController
     public function catalog(Request $request): void
     {
         $page = $this->pageService->getBySlug('product-catalog');
+        $siteTitle = $this->siteTitle();
         $category = trim((string) $request->query('category', ''));
         $search = trim((string) $request->query('q', ''));
         $products = $this->productService->getPublished([
@@ -154,7 +158,7 @@ final class PageController
                 'currentCategory' => $category,
                 'search' => $search,
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
-                    'title' => (string) ($page['title'] ?? 'Product Catalog | Nuteck Paper Products'),
+                    'title' => (string) ($page['title'] ?? ('Product Catalog | ' . $siteTitle)),
                 ]),
             ]
         );
@@ -163,6 +167,7 @@ final class PageController
     public function blogs(Request $request): void
     {
         $page = $this->pageService->getBySlug('blogs');
+        $siteTitle = $this->siteTitle();
         $blogs = $this->blogService->getPublished();
 
         $this->render(
@@ -172,8 +177,8 @@ final class PageController
                 'page' => $page,
                 'blogs' => $blogs,
                 'meta' => $this->seoService->resolve('page', (int) ($page['id'] ?? 0), [
-                    'title' => (string) ($page['title'] ?? 'Blogs | Nuteck Paper Products'),
-                    'description' => 'Latest updates, product stories, and industry insights from Nuteck Paper Products.',
+                    'title' => (string) ($page['title'] ?? ('Blogs | ' . $siteTitle)),
+                    'description' => 'Latest updates, product stories, and industry insights from ' . $siteTitle . '.',
                 ]),
             ]
         );
@@ -182,6 +187,7 @@ final class PageController
     public function blogDetail(Request $request, array $params): void
     {
         $slug = (string) ($params['slug'] ?? '');
+        $siteTitle = $this->siteTitle();
         $blog = $this->blogService->findPublishedBySlug($slug);
 
         if ($blog === null) {
@@ -190,7 +196,7 @@ final class PageController
         }
 
         $meta = [
-            'title' => (string) ($blog['seo_title'] ?? '') !== '' ? (string) $blog['seo_title'] : ((string) ($blog['title'] ?? 'Blog') . ' | Nuteck Paper Products'),
+            'title' => (string) ($blog['seo_title'] ?? '') !== '' ? (string) $blog['seo_title'] : ((string) ($blog['title'] ?? 'Blog') . ' | ' . $siteTitle),
             'description' => (string) ($blog['seo_description'] ?? '') !== '' ? (string) $blog['seo_description'] : (string) ($blog['excerpt'] ?? ''),
             'keywords' => (string) ($blog['seo_keywords'] ?? ''),
             'canonical' => (string) ($blog['canonical_url'] ?? ''),
@@ -220,6 +226,7 @@ final class PageController
     public function productDetail(Request $request, array $params): void
     {
         $slug = (string) ($params['slug'] ?? '');
+        $siteTitle = $this->siteTitle();
         $product = $this->productService->findBySlug($slug);
 
         if ($product === null) {
@@ -234,7 +241,7 @@ final class PageController
                 'product' => $product,
                 'relatedProducts' => $this->productService->getRelated($slug),
                 'meta' => $this->seoService->resolve('product', (int) ($product['id'] ?? 0), [
-                    'title' => (string) ($product['title'] ?? 'Product Detail') . ' | Nuteck Paper Products',
+                    'title' => (string) ($product['title'] ?? 'Product Detail') . ' | ' . $siteTitle,
                     'description' => (string) ($product['short_description'] ?? ''),
                 ]),
             ]
@@ -243,16 +250,23 @@ final class PageController
 
     public function notFound(Request $request): void
     {
+        $siteTitle = $this->siteTitle();
         $this->render(
             'pages/404',
             $request->path(),
             [
                 'meta' => $this->seoService->resolve('global', 0, [
-                    'title' => 'Page Not Found | Nuteck Paper Products',
+                    'title' => 'Page Not Found | ' . $siteTitle,
                 ]),
             ],
             404
         );
+    }
+
+    private function siteTitle(): string
+    {
+        $settings = $this->settingService->getGrouped();
+        return (string) ($settings['site']['title'] ?? 'Nuteck Paper Products');
     }
 
     private function render(string $template, string $currentPath, array $data, int $status = 200): void

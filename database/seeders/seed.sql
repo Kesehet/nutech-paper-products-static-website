@@ -268,6 +268,7 @@ AND NOT EXISTS (SELECT 1 FROM products WHERE slug = 'pre-gummed-paper');
 
 INSERT INTO settings (setting_group, setting_key, setting_value, value_type, is_public) VALUES
 ('site', 'title', 'Nuteck Paper Products', 'string', 1),
+('site', 'footer_tagline', 'Trusted partner for high-performance self-adhesive and release paper solutions.', 'string', 1),
 ('site', 'logo_path', '/assets/img/nutech_square_logo.png', 'string', 1),
 ('site', 'social_linkedin', '', 'string', 1),
 ('site', 'social_facebook', '', 'string', 1),
