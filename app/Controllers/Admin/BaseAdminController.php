@@ -10,6 +10,7 @@ use App\Core\Response;
 use App\Core\Session;
 use App\Core\View;
 use App\Services\ActivityLogger;
+use App\Services\SettingService;
 
 abstract class BaseAdminController
 {
@@ -39,14 +40,18 @@ abstract class BaseAdminController
 
     protected function render(string $template, Request $request, array $payload = []): void
     {
+        $settings = (new SettingService())->getGrouped();
+        $siteTitle = (string) ($settings['site']['title'] ?? 'Nuteck Paper Products');
         $flashSuccess = array_key_exists('flashSuccess', $payload) ? $payload['flashSuccess'] : Session::pullFlash('success');
         $flashError = array_key_exists('flashError', $payload) ? $payload['flashError'] : Session::pullFlash('error');
 
         View::render($template, array_merge([
             'meta' => $payload['meta'] ?? [
-                'title' => 'Admin | Nuteck Paper Products',
+                'title' => 'Admin | ' . $siteTitle,
                 'description' => 'CMS Admin',
             ],
+            'site' => $payload['site'] ?? ($settings['site'] ?? []),
+            'theme' => $payload['theme'] ?? ($settings['theme'] ?? []),
             'currentPath' => $request->path(),
             'authUser' => Auth::user(),
             'csrfToken' => Csrf::token(),

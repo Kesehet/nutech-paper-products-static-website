@@ -13,6 +13,13 @@ final class SettingService
         return $this->defaults();
     }
 
+    public function getSiteTitle(): string
+    {
+        $settings = $this->getGrouped();
+
+        return (string) ($settings['site']['title'] ?? $this->defaults()['site']['title']);
+    }
+
     public function getGrouped(): array
     {
         $defaults = $this->getDefaults();

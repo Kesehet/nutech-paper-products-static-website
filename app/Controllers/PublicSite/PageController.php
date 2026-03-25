@@ -265,8 +265,7 @@ final class PageController
 
     private function siteTitle(): string
     {
-        $settings = $this->settingService->getGrouped();
-        return (string) ($settings['site']['title'] ?? 'Nuteck Paper Products');
+        return $this->settingService->getSiteTitle();
     }
 
     private function render(string $template, string $currentPath, array $data, int $status = 200): void

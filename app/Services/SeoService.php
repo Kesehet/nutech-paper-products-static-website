@@ -8,13 +8,21 @@ use PDOException;
 
 final class SeoService
 {
+    private SettingService $settingService;
+
+    public function __construct()
+    {
+        $this->settingService = new SettingService();
+    }
+
     public function resolve(string $entityType, int $entityId, array $fallback = []): array
     {
         $global = $this->getSeo('global', 0);
         $entity = $this->getSeo($entityType, $entityId);
+        $siteTitle = $this->settingService->getSiteTitle();
 
         return [
-            'title' => (string) ($entity['meta_title'] ?? $fallback['title'] ?? $global['meta_title'] ?? env('APP_NAME', 'Nuteck Paper Products')),
+            'title' => (string) ($entity['meta_title'] ?? $fallback['title'] ?? $global['meta_title'] ?? $siteTitle),
             'description' => (string) ($entity['meta_description'] ?? $global['meta_description'] ?? $fallback['description'] ?? ''),
             'keywords' => (string) ($entity['meta_keywords'] ?? $global['meta_keywords'] ?? ''),
             'canonical' => (string) ($entity['canonical_url'] ?? ''),
