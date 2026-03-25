@@ -56,6 +56,10 @@ if ($inquiryOptions === []) {
 
 $showForm = $isSectionVisible('contact.form');
 $showSidebar = $isSectionVisible('contact.sidebar');
+$oldInput = is_array($oldInput ?? null) ? $oldInput : [];
+$selectedProduct = is_array($selectedProduct ?? null) ? $selectedProduct : null;
+$currentProductId = max(0, (int) ($oldInput['product_id'] ?? ($selectedProduct['id'] ?? 0)));
+$currentInquiryType = trim((string) ($oldInput['inquiry_type'] ?? ($currentProductId > 0 ? 'Product Inquiry' : '')));
 ?>
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
     <?php if ($isSectionVisible('contact.intro')): ?>
@@ -76,35 +80,49 @@ $showSidebar = $isSectionVisible('contact.sidebar');
         <?php if ($showForm): ?>
         <div class="<?= $showSidebar ? 'lg:col-span-3' : '' ?> bg-white rounded-2xl border border-slate-200 p-8">
             <h2 class="text-2xl font-bold text-dark-navy mb-6"><?= e((string) ($form['heading'] ?? 'Get in Touch')) ?></h2>
+            <?php if ($selectedProduct !== null && !empty($selectedProduct['title'])): ?>
+            <div class="mb-6 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-slate-700">
+                Enquiry for product: <span class="font-semibold text-dark-navy"><?= e((string) $selectedProduct['title']) ?></span>
+            </div>
+            <?php endif; ?>
             <form action="<?= e(path_url('/contact-us')) ?>" method="post" class="grid md:grid-cols-2 gap-4">
                 <input type="hidden" name="_csrf" value="<?= e((string) $csrfToken) ?>">
+                <input type="hidden" name="contact_started_at" value="<?= e((string) time()) ?>">
+                <input type="hidden" name="source_page" value="<?= e((string) ($oldInput['source_page'] ?? '/contact-us')) ?>">
+                <?php if ($currentProductId > 0): ?>
+                <input type="hidden" name="product_id" value="<?= e((string) $currentProductId) ?>">
+                <?php endif; ?>
+                <div class="hidden" aria-hidden="true">
+                    <label>Website</label>
+                    <input type="text" name="website" tabindex="-1" autocomplete="off">
+                </div>
                 <div class="md:col-span-1">
                     <label class="block text-sm font-semibold text-slate-700 mb-2"><?= e((string) ($form['full_name_label'] ?? 'Full Name *')) ?></label>
-                    <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" name="full_name" required>
+                    <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" name="full_name" value="<?= e((string) ($oldInput['full_name'] ?? '')) ?>" required>
                 </div>
                 <div class="md:col-span-1">
                     <label class="block text-sm font-semibold text-slate-700 mb-2"><?= e((string) ($form['email_label'] ?? 'Email *')) ?></label>
-                    <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="email" name="email" required>
+                    <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="email" name="email" value="<?= e((string) ($oldInput['email'] ?? '')) ?>" required>
                 </div>
                 <div class="md:col-span-1">
                     <label class="block text-sm font-semibold text-slate-700 mb-2"><?= e((string) ($form['phone_label'] ?? 'Phone')) ?></label>
-                    <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" name="phone">
+                    <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" name="phone" value="<?= e((string) ($oldInput['phone'] ?? '')) ?>">
                 </div>
                 <div class="md:col-span-1">
                     <label class="block text-sm font-semibold text-slate-700 mb-2"><?= e((string) ($form['company_label'] ?? 'Company')) ?></label>
-                    <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" name="company_name">
+                    <input class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" type="text" name="company_name" value="<?= e((string) ($oldInput['company_name'] ?? '')) ?>">
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold text-slate-700 mb-2"><?= e((string) ($form['inquiry_label'] ?? 'Inquiry Type')) ?></label>
                     <select class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" name="inquiry_type">
                         <?php foreach ($inquiryOptions as $option): ?>
-                        <option><?= e($option) ?></option>
+                        <option value="<?= e($option) ?>" <?= $currentInquiryType === $option ? 'selected' : '' ?>><?= e($option) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold text-slate-700 mb-2"><?= e((string) ($form['message_label'] ?? 'Message *')) ?></label>
-                    <textarea class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" rows="5" name="message" required></textarea>
+                    <textarea class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" rows="5" name="message" required><?= e((string) ($oldInput['message'] ?? '')) ?></textarea>
                 </div>
                 <div class="md:col-span-2">
                     <button class="bg-primary hover:bg-primary-hover text-dark-navy px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-lg shadow-primary/20" type="submit">

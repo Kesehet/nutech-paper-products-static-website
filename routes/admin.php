@@ -4,6 +4,7 @@ declare(strict_types=1);
 use App\Controllers\Admin\AuthController;
 use App\Controllers\Admin\BlogAdminController;
 use App\Controllers\Admin\CategoryAdminController;
+use App\Controllers\Admin\ContactInquiryAdminController;
 use App\Controllers\Admin\DashboardController;
 use App\Controllers\Admin\MediaAdminController;
 use App\Controllers\Admin\PageAdminController;
@@ -17,6 +18,8 @@ $router->post('/admin/login', [AuthController::class, 'login']);
 $router->post('/admin/logout', [AuthController::class, 'logout']);
 
 $router->get('/admin/dashboard', [DashboardController::class, 'index']);
+$router->get('/admin/inquiries', [ContactInquiryAdminController::class, 'index']);
+$router->post('/admin/inquiries/export', [ContactInquiryAdminController::class, 'export']);
 
 $router->get('/admin/pages', [PageAdminController::class, 'index']);
 $router->get('/admin/pages/{id}/edit', [PageAdminController::class, 'edit']);

@@ -7,6 +7,7 @@ use App\Core\Auth;
 use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
+use App\Services\ContactInquiryService;
 use PDOException;
 
 final class DashboardController extends BaseAdminController
@@ -22,6 +23,7 @@ final class DashboardController extends BaseAdminController
             'products' => 0,
             'media' => 0,
             'users' => 0,
+            'inquiries' => 0,
         ];
         $recentActivity = [];
 
@@ -31,6 +33,7 @@ final class DashboardController extends BaseAdminController
             $stats['products'] = (int) ($pdo->query('SELECT COUNT(*) FROM products')->fetchColumn() ?: 0);
             $stats['media'] = (int) ($pdo->query('SELECT COUNT(*) FROM media')->fetchColumn() ?: 0);
             $stats['users'] = (int) ($pdo->query('SELECT COUNT(*) FROM users')->fetchColumn() ?: 0);
+            $stats['inquiries'] = (new ContactInquiryService())->countAll();
             $activityStmt = $pdo->query(
                 'SELECT a.id, a.action, a.entity_type, a.entity_id, a.created_at, u.full_name
                  FROM activity_logs a

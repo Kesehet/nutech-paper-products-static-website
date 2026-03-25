@@ -31,7 +31,7 @@ declare(strict_types=1);
             </span>
             <h1 class="text-4xl font-extrabold text-slate-900 mb-4 leading-tight"><?= e((string) ($product['title'] ?? '')) ?></h1>
             <p class="text-slate-600 mb-8"><?= e((string) ($product['short_description'] ?? '')) ?></p>
-            <a href="<?= e(path_url('/contact-us')) ?>" class="inline-flex items-center justify-center px-6 py-3 bg-primary text-dark-navy rounded-xl font-bold hover:bg-primary-hover transition-colors">
+            <a href="<?= e(query_url('/contact-us', ['product' => (string) ($product['slug'] ?? '')])) ?>" class="inline-flex items-center justify-center px-6 py-3 bg-primary text-dark-navy rounded-xl font-bold hover:bg-primary-hover transition-colors">
                 Request a Quote
             </a>
         </div>
@@ -83,6 +83,13 @@ declare(strict_types=1);
             <p class="text-sm text-slate-500 mb-6">Interested in this product? Fill out the form and our team will contact you.</p>
             <form action="<?= e(path_url('/contact-us')) ?>" method="post" class="space-y-4">
                 <input type="hidden" name="_csrf" value="<?= e((string) $csrfToken) ?>">
+                <input type="hidden" name="contact_started_at" value="<?= e((string) time()) ?>">
+                <input type="hidden" name="source_page" value="<?= e((string) ($currentPath ?? '/contact-us')) ?>">
+                <input type="hidden" name="product_id" value="<?= e((string) ($product['id'] ?? 0)) ?>">
+                <div class="hidden" aria-hidden="true">
+                    <label>Website</label>
+                    <input type="text" name="website" tabindex="-1" autocomplete="off">
+                </div>
                 <input class="w-full rounded-lg border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary text-sm" type="text" name="full_name" placeholder="Your Name" required>
                 <input class="w-full rounded-lg border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary text-sm" type="email" name="email" placeholder="email@company.com" required>
                 <textarea class="w-full rounded-lg border-slate-200 bg-slate-50 focus:ring-primary focus:border-primary text-sm" rows="4" name="message" placeholder="Tell us about your specific needs..." required></textarea>

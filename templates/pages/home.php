@@ -136,6 +136,12 @@ $heroImageUrl = preg_match('#^(https?:)?//#i', $heroImagePath) === 1
             <div class="lg:w-1/2 p-8 lg:p-16">
             <form action="<?= e(path_url('/contact-us')) ?>" method="post" class="space-y-6">
                 <input type="hidden" name="_csrf" value="<?= e((string) $csrfToken) ?>">
+                <input type="hidden" name="contact_started_at" value="<?= e((string) time()) ?>">
+                <input type="hidden" name="source_page" value="<?= e((string) ($currentPath ?? '/')) ?>">
+                <div class="hidden" aria-hidden="true">
+                    <label>Website</label>
+                    <input type="text" name="website" tabindex="-1" autocomplete="off">
+                </div>
                 <div class="grid sm:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-2"><?= e((string) ($homeCtaContent['name_label'] ?? 'Name')) ?></label>

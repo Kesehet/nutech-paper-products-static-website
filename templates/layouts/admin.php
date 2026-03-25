@@ -25,6 +25,7 @@ $meta = $meta ?? [];
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/media')) ?>">Media</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/seo')) ?>">SEO</a>
             <?php if (($authUser['role'] ?? '') === 'admin'): ?>
+            <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/inquiries')) ?>">Inquiries</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/settings')) ?>">Settings</a>
             <a class="block px-3 py-2 rounded hover:bg-slate-700" href="<?= e(path_url('/admin/users')) ?>">Users</a>
             <?php endif; ?>

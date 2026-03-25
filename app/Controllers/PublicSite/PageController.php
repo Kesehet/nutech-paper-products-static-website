@@ -4,19 +4,18 @@ declare(strict_types=1);
 namespace App\Controllers\PublicSite;
 
 use App\Core\Csrf;
-use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Core\View;
 use App\Services\BlogService;
+use App\Services\ContactInquiryService;
 use App\Services\NavigationService;
 use App\Services\PageService;
 use App\Services\ProductService;
 use App\Services\ScriptService;
 use App\Services\SeoService;
 use App\Services\SettingService;
-use PDOException;
 
 final class PageController
 {
@@ -27,6 +26,7 @@ final class PageController
     private SeoService $seoService;
     private ScriptService $scriptService;
     private NavigationService $navigationService;
+    private ContactInquiryService $contactInquiryService;
 
     public function __construct()
     {
@@ -37,6 +37,7 @@ final class PageController
         $this->seoService = new SeoService();
         $this->scriptService = new ScriptService();
         $this->navigationService = new NavigationService();
+        $this->contactInquiryService = new ContactInquiryService();
     }
 
     public function home(Request $request): void
@@ -78,6 +79,20 @@ final class PageController
     {
         $page = $this->pageService->getBySlug('contact-us');
         $siteTitle = $this->siteTitle();
+        $oldInput = Session::pullFlash('contact_old', []);
+        $selectedProduct = null;
+
+        $productSlug = trim((string) $request->query('product', ''));
+        if ($productSlug !== '') {
+            $product = $this->productService->findBySlug($productSlug);
+            if (is_array($product)) {
+                $selectedProduct = [
+                    'id' => (int) ($product['id'] ?? 0),
+                    'title' => (string) ($product['title'] ?? ''),
+                ];
+            }
+        }
+
         $this->render(
             'pages/contact',
             $request->path(),
@@ -88,6 +103,8 @@ final class PageController
                 ]),
                 'success' => Session::pullFlash('success'),
                 'error' => Session::pullFlash('error'),
+                'oldInput' => is_array($oldInput) ? $oldInput : [],
+                'selectedProduct' => $selectedProduct,
             ]
         );
     }
@@ -99,40 +116,14 @@ final class PageController
             Response::redirect('/contact-us');
         }
 
-        $name = trim((string) $request->input('full_name', ''));
-        $email = trim((string) $request->input('email', ''));
-        $message = trim((string) $request->input('message', ''));
-
-        if ($name === '' || $email === '' || $message === '') {
-            Session::flash('error', 'Please fill all required fields.');
+        $result = $this->contactInquiryService->submitPublicInquiry($request);
+        if (!$result['ok']) {
+            Session::flash('error', (string) $result['message']);
+            Session::flash('contact_old', $result['old']);
             Response::redirect('/contact-us');
         }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            Session::flash('error', 'Please provide a valid email address.');
-            Response::redirect('/contact-us');
-        }
-
-        try {
-            $pdo = Database::connection();
-            $stmt = $pdo->prepare(
-                'INSERT INTO contact_inquiries (full_name, email, phone, company_name, inquiry_type, message, source_page, status, created_at)
-                 VALUES (:full_name, :email, :phone, :company_name, :inquiry_type, :message, :source_page, :status, NOW())'
-            );
-            $stmt->execute([
-                'full_name' => $name,
-                'email' => $email,
-                'phone' => trim((string) $request->input('phone', '')),
-                'company_name' => trim((string) $request->input('company_name', '')),
-                'inquiry_type' => trim((string) $request->input('inquiry_type', 'General Inquiry')),
-                'message' => $message,
-                'source_page' => '/contact-us',
-                'status' => 'new',
-            ]);
-        } catch (PDOException) {
-        }
-
-        Session::flash('success', 'Thank you. Our team will get back to you shortly.');
+        Session::flash('success', (string) $result['message']);
         Response::redirect('/contact-us');
     }
 
