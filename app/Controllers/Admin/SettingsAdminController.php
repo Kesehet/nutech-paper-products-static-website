@@ -33,7 +33,7 @@ final class SettingsAdminController extends BaseAdminController
             'input' => 'text',
             'section' => 'Branding',
             'label' => 'Logo Path',
-            'description' => 'Use an absolute URL or a local path like /assets/img/nutech_square_logo.png.',
+            'description' => 'Use an absolute URL or a local path like /assets/img/nuteck_square_logo.png.',
         ],
         'site.home_hero_image' => [
             'type' => 'string',

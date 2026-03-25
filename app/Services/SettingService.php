@@ -45,10 +45,10 @@ final class SettingService
             'site' => [
                 'title' => 'Nuteck Paper Products',
                 'footer_tagline' => 'Trusted partner for high-performance self-adhesive and release paper solutions.',
-                'contact_email' => 'info@nutechpaper.com',
+                'contact_email' => 'info@nuteckpaper.com',
                 'contact_phone' => '+91 11 5555 4444',
                 'address' => 'Plot No. 45, Okhla Industrial Estate, Phase III, New Delhi - 110020, India',
-                'logo_path' => '/assets/img/nutech_square_logo.png',
+                'logo_path' => '/assets/img/nuteck_square_logo.png',
                 'social_linkedin' => '',
                 'social_facebook' => '',
                 'social_instagram' => '',

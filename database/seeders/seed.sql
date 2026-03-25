@@ -4,10 +4,10 @@ INSERT INTO roles (name, slug, description, is_system) VALUES
 ON DUPLICATE KEY UPDATE name = VALUES(name), description = VALUES(description);
 
 INSERT INTO users (role_id, full_name, email, password_hash, is_active)
-SELECT r.id, 'System Admin', 'admin@nutech.local', '$2y$10$R5UrYP9bqILZxskWUz3hwORS6D0QrH.nDdHXpSTbQ0Vmm.C5rf0ha', 1
+SELECT r.id, 'System Admin', 'admin@nuteck.local', '$2y$10$R5UrYP9bqILZxskWUz3hwORS6D0QrH.nDdHXpSTbQ0Vmm.C5rf0ha', 1
 FROM roles r
 WHERE r.slug = 'admin'
-AND NOT EXISTS (SELECT 1 FROM users WHERE email = 'admin@nutech.local');
+AND NOT EXISTS (SELECT 1 FROM users WHERE email = 'admin@nuteck.local');
 
 INSERT INTO pages (title, slug, template_key, is_system, is_published) VALUES
 ('Homepage', 'home', 'home', 1, 1),
@@ -269,13 +269,13 @@ AND NOT EXISTS (SELECT 1 FROM products WHERE slug = 'pre-gummed-paper');
 INSERT INTO settings (setting_group, setting_key, setting_value, value_type, is_public) VALUES
 ('site', 'title', 'Nuteck Paper Products', 'string', 1),
 ('site', 'footer_tagline', 'Trusted partner for high-performance self-adhesive and release paper solutions.', 'string', 1),
-('site', 'logo_path', '/assets/img/nutech_square_logo.png', 'string', 1),
+('site', 'logo_path', '/assets/img/nuteck_square_logo.png', 'string', 1),
 ('site', 'social_linkedin', '', 'string', 1),
 ('site', 'social_facebook', '', 'string', 1),
 ('site', 'social_instagram', '', 'string', 1),
 ('site', 'home_hero_image', 'https://images.unsplash.com/photo-1603484477859-abe6a73f9366?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'string', 1),
 ('site', 'home_hero_image_alt', 'Nuteck manufacturing', 'string', 1),
-('site', 'contact_email', 'info@nutechpaper.com', 'string', 1),
+('site', 'contact_email', 'info@nuteckpaper.com', 'string', 1),
 ('site', 'contact_phone', '+91 11 5555 4444', 'string', 1),
 ('site', 'address', 'Plot No. 45, Okhla Industrial Estate, Phase III, New Delhi - 110020, India', 'string', 1),
 ('theme', 'primary_color', '#67C6D0', 'string', 1),

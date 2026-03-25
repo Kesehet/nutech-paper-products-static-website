@@ -9,10 +9,10 @@ $darkNavy = (string) ($theme['dark_navy_color'] ?? '#0F1B2A');
 $backgroundLight = (string) ($theme['background_light_color'] ?? '#F8FAFC');
 $faviconPath = trim((string) ($site['favicon_path'] ?? ''));
 if ($faviconPath === '') {
-    $faviconPath = trim((string) ($site['logo_path'] ?? '/assets/img/nutech_square_logo.png'));
+    $faviconPath = trim((string) ($site['logo_path'] ?? '/assets/img/nuteck_square_logo.png'));
 }
 if ($faviconPath === '') {
-    $faviconPath = '/assets/img/nutech_square_logo.png';
+    $faviconPath = '/assets/img/nuteck_square_logo.png';
 }
 $faviconUrl = preg_match('#^(https?:)?//#i', $faviconPath) === 1
     ? $faviconPath

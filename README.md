@@ -33,7 +33,7 @@ CMS-driven PHP website + admin panel for Hostinger-compatible Apache/PHP hosting
 1. Copy env file:
    - `copy .env.example .env`
 2. Create database:
-   - `nutech_cms`
+   - `nuteck_cms`
 3. Import SQL files in order:
    - `database/schema.sql`
    - `database/seeders/seed.sql`
@@ -48,7 +48,7 @@ CMS-driven PHP website + admin panel for Hostinger-compatible Apache/PHP hosting
 ### URL/Base Path Configuration
 - `APP_URL`: primary site URL (used for host + optional absolute URL generation).
 - `APP_BASE_PATH`: URL path prefix where app is mounted.
-  - Example subfolder deploy: `/nutech-paper-products-static-website`
+  - Example subfolder deploy: `/nuteck-paper-products-static-website`
   - Example root deploy: leave empty
 - `APP_USE_ABSOLUTE_URLS`:
   - `false` (default): generate root-relative URLs like `/assets/...`
@@ -87,7 +87,7 @@ CMS-driven PHP website + admin panel for Hostinger-compatible Apache/PHP hosting
   - `/admin/users`
 
 ## Default Admin Seed
-- Email: `admin@nutech.local`
+- Email: `admin@nuteck.local`
 - Password: `ChangeMe123!`
 
 Change this immediately in production.
@@ -98,7 +98,7 @@ Change this immediately in production.
 - Set production env values in `.env`.
 - Import DB schema and seed data.
 - Configure secure permissions for uploads/log directories.
-- To remove `/nutech-paper-products-static-website` from public URLs:
+- To remove `/nuteck-paper-products-static-website` from public URLs:
   - Preferred: point domain document root to this project directory (or its `public/` folder).
   - Then set `APP_BASE_PATH=` (empty).
   - Optionally set `APP_REDIRECT_TO_BASE_PATH=true` to 301 old subfolder links to root.
